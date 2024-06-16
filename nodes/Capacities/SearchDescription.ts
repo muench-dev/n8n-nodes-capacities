@@ -6,14 +6,14 @@ export const search: INodeProperties[] = [
 		displayName: 'Operation',
 		name: 'operation',
 		type: 'options',
+		noDataExpression: true,
 		required: true,
 		default: 'search',
-		description: 'Operation to perform.',
 		options: [
 			{
 				name: 'Search',
 				value: 'search',
-				description: 'Returns content based on a search term in a set of spaces.',
+				description: 'Returns content based on a search term in a set of spaces',
 				routing: {
 					request: {
 						url: '/search',
@@ -35,7 +35,8 @@ export const search: INodeProperties[] = [
 							},
 						],
 					}
-				}
+				},
+				action: 'Search',
 			},
 		],
 		displayOptions: {
@@ -47,12 +48,12 @@ export const search: INodeProperties[] = [
 		},
 	},
 	{
-		name: 'searchMode',
 		displayName: 'Search Mode',
+		name: 'searchMode',
 		type: 'options',
 		required: true,
 		default: 'title',
-		description: 'The mode to search for content.',
+		description: 'The mode to search for content',
 		options: [
 			{
 				name: 'Title',
@@ -75,12 +76,12 @@ export const search: INodeProperties[] = [
 		}
 	},
 	{
-		name: "searchTerm",
 		displayName: "Search Term",
+		name: "searchTerm",
 		type: "string",
 		required: true,
 		default: "",
-		description: "The term to search for.",
+		description: 'The term to search for',
 		displayOptions: {
 			show: {
 				resource: [
@@ -93,8 +94,8 @@ export const search: INodeProperties[] = [
 		}
 	},
 	{
-		name: "spaceIds",
 		displayName: "Space IDs",
+		name: "spaceIds",
 		type: "options",
 		typeOptions: {
 			multipleValues: true,
@@ -102,9 +103,9 @@ export const search: INodeProperties[] = [
 			loadOptions: loadSpaces,
 		},
 		required: true,
-		default: [],
+		default: '',
 		placeholder: "Add Space ID",
-		description: "The IDs of the spaces to search in.",
+		description: 'The IDs of the spaces to search in',
 		displayOptions: {
 			show: {
 				resource: [
@@ -115,6 +116,5 @@ export const search: INodeProperties[] = [
 				],
 			},
 		},
-
 	}
 ];

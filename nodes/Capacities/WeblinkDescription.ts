@@ -6,9 +6,9 @@ export const weblink: INodeProperties[] = [
 		displayName: 'Operation',
 		name: 'operation',
 		type: 'options',
+		noDataExpression: true,
 		required: true,
 		default: 'save',
-		description: 'The operation to perform.',
 		options: [
 			{
 				name: 'Save',
@@ -39,10 +39,10 @@ export const weblink: INodeProperties[] = [
 		},
 	},
 	{
-		name: 'url',
 		displayName: 'URL',
+		name: 'url',
 		type: 'string',
-		description: 'The URL of the weblink.',
+		description: 'The URL of the weblink',
 		required: true,
 		default: '',
 		displayOptions: {
@@ -57,8 +57,8 @@ export const weblink: INodeProperties[] = [
 		},
 	},
 	{
-		name: 'spaceId',
 		displayName: 'Space ID',
+		name: 'spaceId',
 		type: 'options',
 		typeOptions: {
 			loadOptions: loadSpaces,
@@ -77,8 +77,8 @@ export const weblink: INodeProperties[] = [
 		},
 	},
 	{
-		name: 'weblinkOptions',
 		displayName: 'Weblink Options',
+		name: 'weblinkOptions',
 		placeholder: 'Add Option',
 		type: 'collection',
 		default: {},
@@ -88,18 +88,18 @@ export const weblink: INodeProperties[] = [
 				name: 'mdText',
 				type: 'string',
 				default: '',
-				description: 'The markdown text of the weblink.',
+				description: 'The markdown text of the weblink',
 			},
 			{
-				name: 'titleOverwrite',
 				displayName: 'Title Overwrite',
+				name: 'titleOverwrite',
 				type: 'string',
-				description: 'The title of the weblink.',
+				description: 'The title of the weblink',
 				default: '',
 			},
 			{
-				name: 'tags',
 				displayName: 'Tags',
+				name: 'tags',
 				type: 'string',
 				typeOptions: {
 					multipleValues: true,

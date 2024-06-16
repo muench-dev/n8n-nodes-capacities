@@ -6,9 +6,9 @@ export const space: INodeProperties[] = [
 		displayName: 'Operation',
 		name: 'operation',
 		type: 'options',
+		noDataExpression: true,
 		required: true,
 		default: 'getList',
-		description: 'The operation to perform.',
 		options: [
 			{
 				name: 'Get List',
@@ -35,8 +35,7 @@ export const space: INodeProperties[] = [
 			{
 				name: 'Get Info',
 				value: 'getInfo',
-				action:
-					'Returns the structures (object types) of a space.',
+				action: 'Returns the structures object types of a space',
 				routing: {
 					request: {
 						url: '/space-info',
@@ -72,7 +71,7 @@ export const space: INodeProperties[] = [
 			loadOptions: loadSpaces,
 		},
 		required: true,
-		description: 'The ID of the space.',
+		description: 'The ID of the space',
 		displayOptions: {
 			show: {
 				resource: ['space'],

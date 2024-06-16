@@ -6,12 +6,12 @@ export const dailyNote: INodeProperties[] = [
 		displayName: 'Operation',
 		name: 'operation',
 		type: 'options',
+		noDataExpression: true,
 		required: true,
-		default: 'save',
-		description: 'The operation to perform.',
+		default: 'saveToDailyNote',
 		options: [
 			{
-				name: 'save',
+				name: 'Save',
 				value: 'saveToDailyNote',
 				description: 'Save text to today\'s daily note',
 				routing: {
@@ -26,6 +26,7 @@ export const dailyNote: INodeProperties[] = [
 						},
 					},
 				},
+				action: 'Save a daily note',
 			}
 		],
 		displayOptions: {
@@ -44,7 +45,7 @@ export const dailyNote: INodeProperties[] = [
 			loadOptions: loadSpaces,
 		},
 		required: true,
-		description: 'The ID of the space.',
+		description: 'The ID of the space',
 		displayOptions: {
 			show: {
 				resource: ['dailyNote'],
@@ -58,7 +59,7 @@ export const dailyNote: INodeProperties[] = [
 		name: 'mdText',
 		type: 'string',
 		default: '',
-		description: 'The markdown text of the weblink.',
+		description: 'The markdown text of the weblink',
 		required: true,
 		displayOptions: {
 			show: {

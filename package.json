@@ -1,19 +1,19 @@
 {
-  "name": "n8n-nodes-capacities",
+  "name": "@muench-dev/n8n-nodes-capacities",
   "version": "0.1.0",
-  "description": "",
+  "description": "n8n nodes to connect Capacities App",
   "keywords": [
     "n8n-community-node-package"
   ],
   "license": "MIT",
-  "homepage": "",
+  "homepage": "https://github.com/muench-dev/n8n-nodes-capacities#readme",
   "author": {
-    "name": "",
-    "email": ""
+    "name": "Christian Münch",
+    "email": "christian@muench-worms.de"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/muench-dev/n8n-nodes-capacities"
+    "url": "git+https://github.com/muench-dev/n8n-nodes-capacities.git"
   },
   "main": "index.js",
   "scripts": {
@@ -33,7 +33,7 @@
       "dist/credentials/CapacitiesApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/Capacities.node.js"
+      "dist/nodes/Capacities/Capacities.node.js"
     ]
   },
   "devDependencies": {
@@ -46,5 +46,8 @@
   },
   "peerDependencies": {
     "n8n-workflow": "*"
+  },
+  "bugs": {
+    "url": "https://github.com/muench-dev/n8n-nodes-capacities/issues"
   }
 }

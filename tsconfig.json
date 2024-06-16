@@ -24,8 +24,6 @@
 	"include": [
 		"credentials/**/*",
 		"nodes/**/*.ts",
-		"nodes/*.ts",
-		"nodes/*.json",
 		"nodes/**/*.json",
 		"package.json",
 	],

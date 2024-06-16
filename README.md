@@ -7,5 +7,5 @@ This repository contains the code for the n8n nodes that interact with the [Capa
 ## Installation
 
 ```bash
-npm install muench-dev/n8n-nodes-capacities
+npm install @muench-dev/n8n-nodes-capacities
 ```

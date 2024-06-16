@@ -16,3 +16,8 @@ npm install @muench-dev/n8n-nodes-capacities
 - Get details of a space
 - Save a weblink
 - Save a daily note
+
+## Screenshots
+
+![images](.github/images/screenshot_20240616_174548.png)
+![images](.github/images/screenshot_20240616_181848.png)

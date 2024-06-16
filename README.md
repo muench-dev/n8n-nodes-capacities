@@ -9,3 +9,10 @@ This repository contains the code for the n8n nodes that interact with the [Capa
 ```bash
 npm install @muench-dev/n8n-nodes-capacities
 ```
+
+## Features
+
+- List all spaces
+- Get details of a space
+- Save a weblink
+- Save a daily note

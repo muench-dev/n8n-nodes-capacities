@@ -5,22 +5,19 @@ import {
 	INodeProperties,
 } from 'n8n-workflow';
 
-export class HttpBinApi implements ICredentialType {
-	name = 'httpbinApi';
-	displayName = 'HttpBin API';
-	documentationUrl = '<your-docs-url>';
+export class CapacitiesApi implements ICredentialType {
+	name = 'capacitiesApi';
+	displayName = 'Capactities API';
+	documentationUrl = 'https://docs.capacities.io/developer/api';
 	properties: INodeProperties[] = [
 		{
-			displayName: 'Token',
+			displayName: 'Bearer Token',
 			name: 'token',
 			type: 'string',
+			typeOptions: {
+				password: true,
+			},
 			default: '',
-		},
-		{
-			displayName: 'Domain',
-			name: 'domain',
-			type: 'string',
-			default: 'https://httpbin.org',
 		},
 	];
 
@@ -40,8 +37,8 @@ export class HttpBinApi implements ICredentialType {
 	// The block below tells how this credential can be tested
 	test: ICredentialTestRequest = {
 		request: {
-			baseURL: '={{$credentials?.domain}}',
-			url: '/bearer',
+			baseURL: 'https://api.capacities.io',
+			url: '/spaces',
 		},
 	};
 }

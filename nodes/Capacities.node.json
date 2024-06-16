@@ -1,0 +1,18 @@
+{
+	"node": "n8n-nodes-capacities.capacities",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Personal Knowledge Management"],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://docs.capacities.io/developer/api"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://docs.capacities.io/developer/api"
+			}
+		]
+	}
+}

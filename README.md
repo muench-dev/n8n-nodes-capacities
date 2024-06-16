@@ -12,10 +12,13 @@ npm install @muench-dev/n8n-nodes-capacities
 
 ## Features
 
-- List all spaces
-- Get details of a space
-- Save a weblink
-- Save a daily note
+- Spaces
+  - List all spaces
+  - Get details of a space
+- Content
+  - List nodes (search)
+  - Save a weblink
+  - Save a daily note
 
 ## Screenshots
 

@@ -27,10 +27,7 @@ jobs:
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
-      - run: npm ci
+      - run: npm ci && npm run build
       - run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-      - run: npm dist-tag add @muench-dev/n8n-nodes-capacities@${{ github.event.release.tag_name }} latest
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}

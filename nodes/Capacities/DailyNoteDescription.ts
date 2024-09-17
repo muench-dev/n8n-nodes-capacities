@@ -78,7 +78,7 @@ export const dailyNote: INodeProperties[] = [
 		name: "timestamp",
 		type: "boolean",
 		default: true,
-		description: "If true, a timestamp will not be added to the daily note",
+		description: "Whether to add a timestamp to the note",
 		displayOptions: {
 			show: {
 				resource: [

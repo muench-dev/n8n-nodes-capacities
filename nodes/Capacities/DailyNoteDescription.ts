@@ -23,6 +23,7 @@ export const dailyNote: INodeProperties[] = [
 							spaceId: '={{$parameter.spaceId}}',
 							mdText: '={{$parameter.mdText}}',
 							commandPalette: '={{$parameter.commandPalette}}',
+							noTimeStamp: '={{$parameter.timestamp ? false : true}}',
 						},
 					},
 				},
@@ -72,4 +73,21 @@ export const dailyNote: INodeProperties[] = [
 			},
 		},
 	},
+	{
+		displayName: "Timestamp",
+		name: "timestamp",
+		type: "boolean",
+		default: true,
+		description: "If true, a timestamp will not be added to the daily note",
+		displayOptions: {
+			show: {
+				resource: [
+					'dailyNote',
+				],
+				operation: [
+					'saveToDailyNote',
+				],
+			},
+		},
+	}
 ];

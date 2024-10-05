@@ -102,7 +102,7 @@ export const search: INodeProperties[] = [
 			loadOptions: loadSpaces,
 		},
 		required: true,
-		default: [],
+		default: '',
 		placeholder: "Add Space ID",
 		description: 'The IDs of the spaces to search in',
 		routing: {

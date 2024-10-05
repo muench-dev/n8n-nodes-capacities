@@ -22,9 +22,6 @@ export const weblink: INodeProperties[] = [
 						body: {
 							spaceId: '={{$parameter.spaceId}}',
 							url: '={{$parameter.url}}',
-							titleOverwrite: '={{$parameter.weblinkOptions.titleOverwrite ? $parameter.weblinkOptions.titleOverwrite : ""}}',
-							tags: '={{$parameter.weblinkOptions.tags ? $parameter.weblinkOptions.tags : ""}}',
-							mdText: '={{$parameter.weblinkOptions.mdText ? $parameter.weblinkOptions.mdText : ""}}',
 						},
 					},
 				}
@@ -82,6 +79,7 @@ export const weblink: INodeProperties[] = [
 		placeholder: 'Add Option',
 		type: 'collection',
 		default: {},
+		noDataExpression: false,
 		options: [
 			{
 				displayName: 'MD Text',
@@ -89,6 +87,13 @@ export const weblink: INodeProperties[] = [
 				type: 'string',
 				default: '',
 				description: 'The markdown text of the weblink',
+				routing: {
+					request: {
+						body: {
+							mdText: '={{$value}}',
+						}
+					}
+				}
 			},
 			{
 				displayName: 'Title Overwrite',
@@ -96,6 +101,13 @@ export const weblink: INodeProperties[] = [
 				type: 'string',
 				description: 'The title of the weblink',
 				default: '',
+				routing: {
+					request: {
+						body: {
+							titleOverwrite: '={{$value}}',
+						}
+					}
+				}
 			},
 			{
 				displayName: 'Tags',
@@ -107,6 +119,13 @@ export const weblink: INodeProperties[] = [
 				},
 				default: '',
 				description: 'The tags of the weblink. Commas separate multiple tags.',
+				routing: {
+					request: {
+						body: {
+							tags: '={{$value}}',
+						}
+					}
+				}
 			},
 		],
 		displayOptions: {

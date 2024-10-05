@@ -22,7 +22,6 @@ export const search: INodeProperties[] = [
 						body: {
 							mode: '={{$parameter.searchMode}}',
 							searchTerm: '={{$parameter.searchTerm}}',
-							spaceIds: '={{$parameter.spaceIds}}',
 						},
 					},
 					output: {
@@ -95,7 +94,7 @@ export const search: INodeProperties[] = [
 	},
 	{
 		displayName: "Space IDs",
-		name: "spaceIds",
+		name: "searchSpaceIds",
 		type: "options",
 		typeOptions: {
 			multipleValues: true,
@@ -103,9 +102,16 @@ export const search: INodeProperties[] = [
 			loadOptions: loadSpaces,
 		},
 		required: true,
-		default: '',
+		default: [],
 		placeholder: "Add Space ID",
 		description: 'The IDs of the spaces to search in',
+		routing: {
+			request: {
+				body: {
+					spaceIds: '={{$value}}',
+				}
+			}
+		},
 		displayOptions: {
 			show: {
 				resource: [

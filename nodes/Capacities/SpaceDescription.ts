@@ -40,9 +40,6 @@ export const space: INodeProperties[] = [
 					request: {
 						url: '/space-info',
 						method: 'GET',
-						qs: {
-							spaceid: '={{$parameter["spaceId"]}}',
-						},
 					},
 					output: {
 						postReceive: [
@@ -72,6 +69,13 @@ export const space: INodeProperties[] = [
 		},
 		required: true,
 		description: 'The ID of the space',
+		routing: {
+			request: {
+				qs: {
+					spaceid: '={{$value}}',
+				},
+			}
+		},
 		displayOptions: {
 			show: {
 				resource: ['space'],

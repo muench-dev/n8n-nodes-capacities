@@ -95,20 +95,19 @@ export const search: INodeProperties[] = [
 	{
 		displayName: "Space IDs",
 		name: "searchSpaceIds",
-		type: "options",
+		type: "multiOptions",
 		typeOptions: {
-			multipleValues: true,
 			emptyValue: 'Please select a space',
 			loadOptions: loadSpaces,
 		},
 		required: true,
-		default: '',
+		default: [],
 		placeholder: "Add Space ID",
 		description: 'The IDs of the spaces to search in',
 		routing: {
 			request: {
 				body: {
-					spaceIds: '={{$value}}',
+					spaceIds: '={{$value != "" ? $value : []}}',
 				}
 			}
 		},

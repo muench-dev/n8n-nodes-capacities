@@ -1,4 +1,4 @@
-import {INodeType, INodeTypeDescription, NodeConnectionType} from 'n8n-workflow';
+import {INodeType, INodeTypeDescription} from 'n8n-workflow';
 import { resources } from './ResourceDescription';
 import { general } from "./GeneralDescription";
 import { space } from './SpaceDescription';

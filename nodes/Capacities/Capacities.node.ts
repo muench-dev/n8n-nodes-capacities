@@ -1,4 +1,4 @@
-import {INodeType, INodeTypeDescription} from 'n8n-workflow';
+import {INodeType, INodeTypeDescription, NodeConnectionType} from 'n8n-workflow';
 import { resources } from './ResourceDescription';
 import { general } from "./GeneralDescription";
 import { space } from './SpaceDescription';
@@ -18,8 +18,8 @@ export class Capacities implements INodeType {
 		defaults: {
 			name: 'Capacities',
 		},
-		inputs: ['main'],
-		outputs: ['main'],
+		inputs: [NodeConnectionType.Main],
+		outputs: [NodeConnectionType.Main],
 		credentials: [
 			{
 				name: 'capacitiesApi',

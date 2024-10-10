@@ -87,6 +87,7 @@ export const weblink: INodeProperties[] = [
 				type: 'string',
 				default: '',
 				description: 'The markdown text of the weblink',
+				hint: 'Text formatted as markdown that will be added to the notes section',
 				routing: {
 					request: {
 						body: {
@@ -100,11 +101,27 @@ export const weblink: INodeProperties[] = [
 				name: 'titleOverwrite',
 				type: 'string',
 				description: 'The title of the weblink',
+				hint: 'If empty, the title will be fetched from the URL',
 				default: '',
 				routing: {
 					request: {
 						body: {
 							titleOverwrite: '={{$value}}',
+						}
+					}
+				}
+			},
+			{
+				displayName: 'Description Overwrite',
+				name: 'descriptionOverwrite',
+				type: 'string',
+				description: 'The description of the weblink',
+				hint: 'If empty, the description will be fetched from the URL',
+				default: '',
+				routing: {
+					request: {
+						body: {
+							descriptionOverwrite: '={{$value}}',
 						}
 					}
 				}

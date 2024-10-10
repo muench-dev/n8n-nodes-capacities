@@ -18,8 +18,10 @@ export class Capacities implements INodeType {
 		defaults: {
 			name: 'Capacities',
 		},
-		inputs: [NodeConnectionType.Main],
-		outputs: [NodeConnectionType.Main],
+		// @ts-ignore
+		inputs: ['main'],
+		// @ts-ignore
+		outputs: ['main'],
 		credentials: [
 			{
 				name: 'capacitiesApi',

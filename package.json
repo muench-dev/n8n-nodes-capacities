@@ -1,6 +1,6 @@
 {
   "name": "@muench-dev/n8n-nodes-capacities",
-  "version": "0.6.6",
+  "version": "0.7.0",
   "description": "n8n nodes to connect Capacities App",
   "keywords": [
     "n8n-community-node-package"

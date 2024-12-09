@@ -1,5 +1,5 @@
 import {
-	IAuthenticateGeneric,
+	IAuthenticateGeneric, Icon,
 	ICredentialTestRequest,
 	ICredentialType,
 	INodeProperties,
@@ -9,6 +9,7 @@ export class CapacitiesApi implements ICredentialType {
 	name = 'capacitiesApi';
 	displayName = 'Capactities API';
 	documentationUrl = 'https://docs.capacities.io/developer/api';
+	icon = 'node:@muench-dev/n8n-nodes-capacities.capacities' as Icon;
 	properties: INodeProperties[] = [
 		{
 			displayName: 'Bearer Token',

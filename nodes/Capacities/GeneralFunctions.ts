@@ -1,4 +1,4 @@
-import {ILoadOptions} from "n8n-workflow/dist/Interfaces";
+import type {ILoadOptions} from "n8n-workflow";
 
 export const loadSpaces: ILoadOptions = {
 	routing: {

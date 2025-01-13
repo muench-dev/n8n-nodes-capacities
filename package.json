@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "@types/node": "~22.10.1",
-    "@typescript-eslint/parser": "~8.18",
+    "@typescript-eslint/parser": "~8.19",
     "braces": "^3.0.3",
     "copyfiles": "^2.4.1",
     "eslint-plugin-n8n-nodes-base": "^1.16.1",

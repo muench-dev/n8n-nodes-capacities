@@ -48,7 +48,7 @@
     "n8n-workflow": "*",
     "prettier": "^3.4.1",
     "rimraf": "^6.0.1",
-    "typescript": "~5.7.2"
+    "typescript": "~5.8.2"
   },
   "peerDependencies": {
     "n8n-workflow": "*"

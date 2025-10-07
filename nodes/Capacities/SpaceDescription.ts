@@ -1,5 +1,5 @@
 import type { INodeProperties } from 'n8n-workflow';
-import {loadSpaces} from "./GeneralFunctions";
+import { loadSpaces } from './GeneralFunctions';
 
 export const space: INodeProperties[] = [
 	{
@@ -18,7 +18,6 @@ export const space: INodeProperties[] = [
 					request: {
 						url: '/spaces',
 						method: 'GET',
-
 					},
 					output: {
 						postReceive: [
@@ -29,28 +28,20 @@ export const space: INodeProperties[] = [
 								},
 							},
 						],
-					}
+					},
 				},
 			},
 			{
 				name: 'Get Info',
 				value: 'getInfo',
-				action: 'Returns the structures object types of a space',
+				action: 'Get structures and collections of a space',
+				description:
+					'Returns object types, property definitions, and collections for the selected space',
 				routing: {
 					request: {
 						url: '/space-info',
 						method: 'GET',
 					},
-					output: {
-						postReceive: [
-							{
-								type: 'rootProperty',
-								properties: {
-									property: 'structures',
-								},
-							},
-						],
-					}
 				},
 			},
 		],
@@ -74,7 +65,7 @@ export const space: INodeProperties[] = [
 				qs: {
 					spaceid: '={{$value}}',
 				},
-			}
+			},
 		},
 		displayOptions: {
 			show: {

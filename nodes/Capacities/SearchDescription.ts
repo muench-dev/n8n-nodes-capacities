@@ -1,5 +1,5 @@
 import type { INodeProperties } from 'n8n-workflow';
-import { loadSpaces} from "./GeneralFunctions";
+import { loadSpaces } from './GeneralFunctions';
 
 export const search: INodeProperties[] = [
 	{
@@ -107,9 +107,9 @@ export const search: INodeProperties[] = [
 		routing: {
 			request: {
 				body: {
-					spaceIds: '={{$value != "" ? $value : []}}',
-				}
-			}
+					spaceIds: '={{Array.isArray($value) ? $value : []}}',
+				},
+			},
 		},
 		displayOptions: {
 			show: {
@@ -121,5 +121,35 @@ export const search: INodeProperties[] = [
 				],
 			},
 		},
-	}
+	},
+	{
+		displayName: 'Structure Names or IDs',
+		name: 'filterStructureIds',
+		type: 'multiOptions',
+		typeOptions: {
+			loadOptionsMethod: 'loadStructures',
+			loadOptionsDependsOn: ['searchSpaceIds'],
+			emptyValue: 'Select a structure',
+		},
+		default: [],
+		placeholder: 'Add Structure ID',
+		description: 'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
+		routing: {
+			request: {
+				body: {
+					filterStructureIds: '={{Array.isArray($value) ? $value : []}}',
+				},
+			},
+		},
+		displayOptions: {
+			show: {
+				resource: [
+					'search',
+				],
+				operation: [
+					'search',
+				],
+			},
+		},
+	},
 ];

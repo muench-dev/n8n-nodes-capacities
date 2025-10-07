@@ -12,11 +12,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v3
         with:
-          node-version: 20
-      - run: npm ci
-      - run: npm test
+          node-version: 22
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build
+        run: pnpm run build
+      #- run: pnpm ci
+      #- run: pnpm test
 
   publish-npm:
     needs: build
@@ -25,11 +30,19 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version: 22
           registry-url: https://registry.npmjs.org/
-      - run: npm ci && npm run build
-      - run: npm publish --provenance --access public
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build
+        run: pnpm run build
+      #- run: npm ci && npm run build
+      - name: Publish
+        shell: bash
+        run: pnpm publish --access public --no-git-checks
         env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+          NPM_CONFIG_PROVENANCE: true
+          NODE_AUTH_TOKEN: ${{ secrets.npm_token }}

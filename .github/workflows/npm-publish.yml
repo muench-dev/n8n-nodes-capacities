@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Build
-        run: pnpm run build
+        run: pnpm build
 
   publish-npm:
     needs: build
@@ -36,8 +36,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Build
-        run: pnpm run build
-      #- run: npm ci && npm run build
+        run: pnpm build
       - name: Publish
         shell: bash
         run: pnpm publish --access public --no-git-checks

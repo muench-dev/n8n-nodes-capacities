@@ -131,11 +131,11 @@ describe('loadStructures helper', () => {
 			'capacitiesApi',
 			expect.objectContaining({ qs: { spaceid: 'space-beta' } }),
 		);
-		expect(result).toEqual([
-			{ name: 'Alpha (space-alpha)', value: 'structure-a' },
-			{ name: 'Beta (space-alpha)', value: 'structure-b' },
-			{ name: 'Delta (space-beta)', value: 'structure-d' },
-			{ name: 'Gamma (space-beta)', value: 'structure-c' },
+			expect(result).toEqual([
+				{ name: 'Alpha (Space-Alpha)', value: 'structure-a' },
+				{ name: 'Beta (Space-Alpha)', value: 'structure-b' },
+				{ name: 'Delta (Space-Beta)', value: 'structure-d' },
+				{ name: 'Gamma (Space-Beta)', value: 'structure-c' },
 		]);
 	});
 });

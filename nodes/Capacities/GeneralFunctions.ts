@@ -48,6 +48,7 @@ export async function loadStructures(this: ILoadOptionsFunctions): Promise<INode
 	}
 
 	const structureLabelById = new Map<string, string>();
+	const formatSpaceContext = (id: string) => id.replace(/\b\w/g, (char) => char.toUpperCase());
 
 	for (const spaceId of spaceIds) {
 		if (!spaceId) {
@@ -106,7 +107,8 @@ export async function loadStructures(this: ILoadOptionsFunctions): Promise<INode
 				idValue;
 
 			const structureName = typeof displayNameSource === 'string' ? displayNameSource : idValue;
-			const nameWithContext = spaceIds.length > 1 ? `${structureName} (${spaceId})` : structureName;
+			const spaceLabel = formatSpaceContext(spaceId);
+			const nameWithContext = spaceIds.length > 1 ? `${structureName} (${spaceLabel})` : structureName;
 			if (!structureLabelById.has(idValue)) {
 				structureLabelById.set(idValue, nameWithContext);
 			}

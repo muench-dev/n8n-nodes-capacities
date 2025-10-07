@@ -1,12 +1,19 @@
 import type {INodeType, INodeTypeDescription} from 'n8n-workflow';
 import { resources } from './ResourceDescription';
-import { general } from "./GeneralDescription";
+import { general } from './GeneralDescription';
 import { space } from './SpaceDescription';
 import { search } from './SearchDescription';
 import { weblink } from './WeblinkDescription';
 import { dailyNote } from './DailyNoteDescription';
+import { loadStructures } from './GeneralFunctions';
 
 export class Capacities implements INodeType {
+	methods = {
+		loadOptions: {
+			loadStructures,
+		},
+	};
+
 	description: INodeTypeDescription = {
 		displayName: 'Capacities',
 		name: 'capacities',

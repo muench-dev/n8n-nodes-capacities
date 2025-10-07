@@ -8,25 +8,30 @@
 
 ## Build, Test, and Development Commands
 ```bash
-npm install            # install dependencies
-npm run dev            # TypeScript watch build for local iteration
-npm run build          # clean, compile, and copy image assets into dist/
-npm run lint           # run ESLint against nodes, credentials, and package.json
-npm test               # alias for npm run lint, used by CI
-npm run format         # apply Prettier to nodes/ and credentials/
+pnpm install          # install dependencies
+pnpm dev              # TypeScript watch build for local iteration
+pnpm build            # clean, compile, and copy image assets into dist/
+pnpm lint             # run ESLint against nodes, credentials, and package.json
+pnpm test             # alias for pnpm lint, used by CI
+pnpm format           # apply Prettier to nodes/ and credentials/
 ```
-Stick to one package manager per branch; npm and pnpm lockfiles are both tracked.
+Stick to one package manager per branch; pnpm is preferred and the lockfile is tracked.
 
 ## Coding Style & Naming Conventions
-- Source uses tabs (width 2) and single quotes, enforced by Prettier (`npm run format`).
+- Source uses tabs (width 2) and single quotes, enforced by Prettier (`pnpm format`).
 - Favor descriptive PascalCase for node classes, camelCase for helpers, and snake_case only for API field mirrors.
 - Follow `eslint-plugin-n8n-nodes-base` guidance; lint warnings usually mean the node will not pass community review.
 - Place shared helpers in `GeneralFunctions.ts` and reuse translation strings to avoid duplicate copy.
 
 ## Testing Guidelines
-- Treat linting as the first test gate; run `npm run lint` before every push.
+- Treat linting as the first test gate; run `pnpm lint` before every push.
 - For new operations, add n8n credential tests when possible by enhancing the `test` block in the credential file.
 - Document any manual smoke tests in the PR when UI flows change.
+- Jest suites live under `nodes/Capacities/__tests__`; they mock Capacities API calls via `requestWithAuthentication` stubs to keep tests unit-scoped.
+- Run `pnpm test` (ts-jest) to execute the node description and helper coverage:
+```bash
+pnpm test
+```
 
 ## Commit & Pull Request Guidelines
 - Use short, imperative commit subjects (e.g., `Add save daily note action`); dependency bumps follow the existing `Bump package from X to Y` pattern.

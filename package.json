@@ -2,6 +2,7 @@
   "name": "@muench-dev/n8n-nodes-capacities",
   "version": "0.7.2",
   "description": "n8n nodes to connect Capacities App",
+  "packageManager": "pnpm@9.11.0",
   "keywords": [
     "n8n-community-node-package"
   ],

@@ -31,7 +31,7 @@ importers:
         version: 30.2.0(@types/node@22.19.0)
       n8n-workflow:
         specifier: '*'
-        version: 1.116.0
+        version: 1.118.1
       prettier:
         specifier: ^3.4.1
         version: 3.6.2
@@ -1572,8 +1572,8 @@ packages:
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
-  n8n-workflow@1.116.0:
-    resolution: {integrity: sha512-myToaZibWgss7SVldf+hUIj0qOxAN42IoFIpmzxiagFDW6/P1RyCQ30oD9IdSpt2jV1CbS9cGSr3PG0N/vGGQA==}
+  n8n-workflow@1.118.1:
+    resolution: {integrity: sha512-UzaiaIBzhjBJWm+eaEFdsCcA0KNbR+/ZppE6uoOjifrbvs3cjWe6m0VsVJ9NItTKouKIgygwr5ZTJPhKJ3jzJA==}
 
   napi-postinstall@0.3.4:
     resolution: {integrity: sha512-PHI5f1O0EP5xJ9gQmFGMS6IZcrVvTjpXjz7Na41gTE7eE2hK11lg04CECCYEEjdc17EV4DO+fkGEtt7TpTaTiQ==}
@@ -3989,11 +3989,11 @@ snapshots:
 
   ms@2.1.3: {}
 
-  n8n-workflow@1.116.0:
+  n8n-workflow@1.118.1:
     dependencies:
       '@n8n/errors': 0.5.0
       '@n8n/tournament': 1.0.6
-      ast-types: 0.15.2
+      ast-types: 0.16.1
       callsites: 3.1.0
       esprima-next: 5.8.4
       form-data: 4.0.0

@@ -31,7 +31,7 @@ importers:
         version: 30.2.0(@types/node@25.0.10)
       n8n-workflow:
         specifier: '*'
-        version: 2.2.2
+        version: 2.5.1
       prettier:
         specifier: ^3.4.1
         version: 3.7.4
@@ -1591,8 +1591,8 @@ packages:
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
-  n8n-workflow@2.2.2:
-    resolution: {integrity: sha512-ioySH5mRmXDeVxkZNXbv6ktMvpiD2HwdJK+Hl5znsxia7QTa1Ih4wJjpwg+fig7TF0rnqH59u70lLLAJ6wA6WA==}
+  n8n-workflow@2.5.1:
+    resolution: {integrity: sha512-Kw+bpEIYc9RUu0yJKNMJ8CpqLqFA4L9dkED3dn4OpsiECGBtAzplWzixizUCQkKjQnoGjfkW/et1GhzEaj8meQ==}
 
   napi-postinstall@0.3.4:
     resolution: {integrity: sha512-PHI5f1O0EP5xJ9gQmFGMS6IZcrVvTjpXjz7Na41gTE7eE2hK11lg04CECCYEEjdc17EV4DO+fkGEtt7TpTaTiQ==}
@@ -1812,8 +1812,9 @@ packages:
     resolution: {integrity: sha512-x/+Cz4YrimQxQccJf5mKEbIa1NzeCRNI5Ecl/ekmlYaampdNLPalVyIcCZNNH3MvmqBugV5TMYZXv0ljslUlaw==}
     engines: {node: '>= 0.4'}
 
-  sax@1.4.3:
-    resolution: {integrity: sha512-yqYn1JhPczigF94DMS+shiDMjDowYO6y9+wB/4WgO0Y19jWYk0lQ4tuG5KI7kj4FTp1wxPj5IFfcrz/s1c3jjQ==}
+  sax@1.4.4:
+    resolution: {integrity: sha512-1n3r/tGXO6b6VXMdFT54SHzT9ytu9yr7TaELowdYpMqY/Ao7EnlQGmAQ1+RatX7Tkkdm6hONI2owqNx2aZj5Sw==}
+    engines: {node: '>=11.0.0'}
 
   semver@6.3.1:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
@@ -2050,8 +2051,8 @@ packages:
   walker@1.0.8:
     resolution: {integrity: sha512-ts/8E8l5b7kY0vlWLewOkDXMmPdLcVV4GmOQLyxuSswIJsweeFZtAsMF7k1Nszz+TYBQrlYRmzOnr398y1JemQ==}
 
-  which-typed-array@1.1.19:
-    resolution: {integrity: sha512-rEvr90Bck4WZt9HHFC4DJMsjvu7x+r6bImz0/BrbWb7A2djJ8hnZMrWnHo9F8ssv0OMErasDhftrfROTyqSDrw==}
+  which-typed-array@1.1.20:
+    resolution: {integrity: sha512-LYfpUkmqwl0h9A2HL09Mms427Q1RZWuOHsukfVcKRq9q95iQxdw0ix1JQrqbcDR9PH1QDwf5Qo8OZb5lksZ8Xg==}
     engines: {node: '>= 0.4'}
 
   which@2.0.2:
@@ -3535,7 +3536,7 @@ snapshots:
 
   is-typed-array@1.1.15:
     dependencies:
-      which-typed-array: 1.1.19
+      which-typed-array: 1.1.20
 
   isarray@0.0.1: {}
 
@@ -4022,7 +4023,7 @@ snapshots:
 
   ms@2.1.3: {}
 
-  n8n-workflow@2.2.2:
+  n8n-workflow@2.5.1:
     dependencies:
       '@n8n/errors': 0.5.0
       '@n8n/tournament': 1.0.6
@@ -4250,7 +4251,7 @@ snapshots:
       es-errors: 1.3.0
       is-regex: 1.2.1
 
-  sax@1.4.3: {}
+  sax@1.4.4: {}
 
   semver@6.3.1: {}
 
@@ -4474,7 +4475,7 @@ snapshots:
       is-arguments: 1.2.0
       is-generator-function: 1.1.2
       is-typed-array: 1.1.15
-      which-typed-array: 1.1.19
+      which-typed-array: 1.1.20
 
   v8-to-istanbul@9.3.0:
     dependencies:
@@ -4486,7 +4487,7 @@ snapshots:
     dependencies:
       makeerror: 1.0.12
 
-  which-typed-array@1.1.19:
+  which-typed-array@1.1.20:
     dependencies:
       available-typed-arrays: 1.0.7
       call-bind: 1.0.8
@@ -4525,7 +4526,7 @@ snapshots:
 
   xml2js@0.6.2:
     dependencies:
-      sax: 1.4.3
+      sax: 1.4.4
       xmlbuilder: 11.0.1
 
   xmlbuilder@11.0.1: {}

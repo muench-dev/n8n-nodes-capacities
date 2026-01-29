@@ -13,7 +13,7 @@ export const search: INodeProperties[] = [
 			{
 				name: 'Search',
 				value: 'search',
-				description: 'Returns content based on a search term in a set of spaces',
+				description: 'Returns content based on a search term',
 				routing: {
 					request: {
 						url: '/lookup',

@@ -16,12 +16,12 @@ export const search: INodeProperties[] = [
 				description: 'Returns content based on a search term in a set of spaces',
 				routing: {
 					request: {
-						url: '/search',
+						url: '/lookup',
 						method: 'POST',
 						json: true,
 						body: {
-							mode: '={{$parameter.searchMode}}',
 							searchTerm: '={{$parameter.searchTerm}}',
+							spaceId: '={{$parameter.searchSpaceId}}',
 						},
 					},
 					output: {
@@ -46,34 +46,7 @@ export const search: INodeProperties[] = [
 			},
 		},
 	},
-	{
-		displayName: 'Search Mode',
-		name: 'searchMode',
-		type: 'options',
-		required: true,
-		default: 'title',
-		description: 'The mode to search for content',
-		options: [
-			{
-				name: 'Title',
-				value: 'title',
-			},
-			{
-				name: 'Full Text',
-				value: 'fullText',
-			},
-		],
-		displayOptions: {
-			show: {
-				resource: [
-					'search',
-				],
-				operation: [
-					'search',
-				],
-			},
-		}
-	},
+
 	{
 		displayName: "Search Term",
 		name: "searchTerm",
@@ -93,24 +66,16 @@ export const search: INodeProperties[] = [
 		}
 	},
 	{
-		displayName: "Space IDs",
-		name: "searchSpaceIds",
-		type: "multiOptions",
+		displayName: "Space",
+		name: "searchSpaceId",
+		type: "options",
 		typeOptions: {
 			emptyValue: 'Please select a space',
 			loadOptions: loadSpaces,
 		},
-		required: true,
-		default: [],
-		placeholder: "Add Space ID",
-		description: 'The IDs of the spaces to search in',
-		routing: {
-			request: {
-				body: {
-					spaceIds: '={{Array.isArray($value) ? $value : []}}',
-				},
-			},
-		},
+		default: '',
+		placeholder: "Select a Space",
+		description: 'The ID of the space to search in. Leave empty to search all spaces.',
 		displayOptions: {
 			show: {
 				resource: [
@@ -122,34 +87,5 @@ export const search: INodeProperties[] = [
 			},
 		},
 	},
-	{
-		displayName: 'Structure Names or IDs',
-		name: 'filterStructureIds',
-		type: 'multiOptions',
-		typeOptions: {
-			loadOptionsMethod: 'loadStructures',
-			loadOptionsDependsOn: ['searchSpaceIds'],
-			emptyValue: 'Select a structure',
-		},
-		default: [],
-		placeholder: 'Add Structure ID',
-		description: 'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
-		routing: {
-			request: {
-				body: {
-					filterStructureIds: '={{Array.isArray($value) ? $value : []}}',
-				},
-			},
-		},
-		displayOptions: {
-			show: {
-				resource: [
-					'search',
-				],
-				operation: [
-					'search',
-				],
-			},
-		},
-	},
+
 ];

@@ -31,7 +31,7 @@ importers:
         version: 30.2.0(@types/node@25.2.0)
       n8n-workflow:
         specifier: '*'
-        version: 2.5.1
+        version: 2.6.0
       prettier:
         specifier: ^3.4.1
         version: 3.8.1
@@ -1591,8 +1591,8 @@ packages:
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
-  n8n-workflow@2.5.1:
-    resolution: {integrity: sha512-Kw+bpEIYc9RUu0yJKNMJ8CpqLqFA4L9dkED3dn4OpsiECGBtAzplWzixizUCQkKjQnoGjfkW/et1GhzEaj8meQ==}
+  n8n-workflow@2.6.0:
+    resolution: {integrity: sha512-GIphLKWQhs3LKT3Z1dtQB/QhviGhYLQr0wXa/gm+U86/F3vgTSloXyYyjBKyYBzfCWCs8ay4w8VaqZXiMh/X9A==}
 
   napi-postinstall@0.3.4:
     resolution: {integrity: sha512-PHI5f1O0EP5xJ9gQmFGMS6IZcrVvTjpXjz7Na41gTE7eE2hK11lg04CECCYEEjdc17EV4DO+fkGEtt7TpTaTiQ==}
@@ -4023,7 +4023,7 @@ snapshots:
 
   ms@2.1.3: {}
 
-  n8n-workflow@2.5.1:
+  n8n-workflow@2.6.0:
     dependencies:
       '@n8n/errors': 0.5.0
       '@n8n/tournament': 1.0.6

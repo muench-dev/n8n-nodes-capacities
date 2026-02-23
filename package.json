@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
-    "@types/node": "~25.2.0",
+    "@types/node": "~25.3.0",
     "@typescript-eslint/parser": "~8.56",
     "braces": "^3.0.3",
     "copyfiles": "^2.4.1",

@@ -50,32 +50,35 @@ export async function loadStructures(this: ILoadOptionsFunctions): Promise<INode
 	const structureLabelById = new Map<string, string>();
 	const formatSpaceContext = (id: string) => id.replace(/\b\w/g, (char) => char.toUpperCase());
 
-	for (const spaceId of spaceIds) {
-		if (!spaceId) {
-			continue;
-		}
+	const responses = await Promise.all(
+		spaceIds
+			.filter((spaceId) => !!spaceId)
+			.map(async (spaceId) => {
+				const response = (await this.helpers.requestWithAuthentication.call(this, 'capacitiesApi', {
+					method: 'GET',
+					baseURL: 'https://api.capacities.io',
+					url: '/space-info',
+					qs: {
+						spaceid: spaceId,
+					},
+					json: true,
+				})) as {
+					structures?: Array<Record<string, unknown>> | Record<string, Record<string, unknown>>;
+					space?: {
+						structures?: Array<Record<string, unknown>> | Record<string, Record<string, unknown>>;
+					};
+					data?: {
+						structures?: Array<Record<string, unknown>> | Record<string, Record<string, unknown>>;
+					};
+					spaceInfo?: {
+						structures?: Array<Record<string, unknown>> | Record<string, Record<string, unknown>>;
+					};
+				};
+				return { spaceId, response };
+			}),
+	);
 
-		const response = (await this.helpers.requestWithAuthentication.call(this, 'capacitiesApi', {
-			method: 'GET',
-			baseURL: 'https://api.capacities.io',
-			url: '/space-info',
-			qs: {
-				spaceid: spaceId,
-			},
-			json: true,
-		})) as {
-			structures?: Array<Record<string, unknown>> | Record<string, Record<string, unknown>>;
-			space?: {
-				structures?: Array<Record<string, unknown>> | Record<string, Record<string, unknown>>;
-			};
-			data?: {
-				structures?: Array<Record<string, unknown>> | Record<string, Record<string, unknown>>;
-			};
-			spaceInfo?: {
-				structures?: Array<Record<string, unknown>> | Record<string, Record<string, unknown>>;
-			};
-		};
-
+	for (const { spaceId, response } of responses) {
 		const extractStructures = (structuresSource: unknown): Array<Record<string, unknown>> => {
 			if (Array.isArray(structuresSource)) {
 				return structuresSource as Array<Record<string, unknown>>;

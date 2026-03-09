@@ -31,7 +31,7 @@ importers:
         version: 30.2.0(@types/node@25.3.3)
       n8n-workflow:
         specifier: '*'
-        version: 2.10.1
+        version: 2.11.1
       prettier:
         specifier: ^3.4.1
         version: 3.8.1
@@ -1052,8 +1052,8 @@ packages:
     resolution: {integrity: sha512-CYcENa+FtcUKLmhhqyctpclsq7QF38pKjZHsGNiSQF5r4FtoKDWabFDl3hzaEQMvT1LHEysw5twgLvpYYb4vbw==}
     engines: {node: ^10.12.0 || >=12.0.0}
 
-  flatted@3.3.3:
-    resolution: {integrity: sha512-GX+ysw4PBCz0PzosHDepZGANEuFCMLrnRTiEy9McGjmkCQYwRq4A/X786G/fjM/+OjsWSU1ZrY5qyARZmO/uwg==}
+  flatted@3.4.0:
+    resolution: {integrity: sha512-kC6Bb+ooptOIvWj5B63EQWkF0FEnNjV2ZNkLMLZRDDduIiWeFF4iKnslwhiWxjAdbg4NzTNo6h0qLuvFrcx+Sw==}
 
   for-each@0.3.5:
     resolution: {integrity: sha512-dKx12eRCVIzqCxFGplyFKJMPvLEWgmNtUrpTiJIR5u97zEhRG8ySrtboPHZXx7daLxQVrl643cTzbab2tkQjxg==}
@@ -1454,8 +1454,8 @@ packages:
     engines: {node: '>=6'}
     hasBin: true
 
-  jsonrepair@3.13.1:
-    resolution: {integrity: sha512-WJeiE0jGfxYmtLwBTEk8+y/mYcaleyLXWaqp5bJu0/ZTSeG0KQq/wWQ8pmnkKenEdN6pdnn6QtcoSUkbqDHWNw==}
+  jsonrepair@3.13.2:
+    resolution: {integrity: sha512-Leuly0nbM4R+S5SVJk3VHfw1oxnlEK9KygdZvfUtEtTawNDyzB4qa1xWTmFt1aeoA7sXZkVTRuIixJ8bAvqVUg==}
     hasBin: true
 
   jssha@3.3.1:
@@ -1582,8 +1582,8 @@ packages:
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
-  n8n-workflow@2.10.1:
-    resolution: {integrity: sha512-wbTTOnrb/PJKWDYisxsk5k/E5yQK6MEWw7e+wNEtRn5IeYDK849GgcMesB0+2x7wlzj+LzAt0X7jvX2QeGhbGA==}
+  n8n-workflow@2.11.1:
+    resolution: {integrity: sha512-pln5b5Uu8f0ecaIdRt7RBxulatJz5DGZ6azqzGmekavYtMI3XIqzF60cozO0bXjRJ8mGUEZXcvlttMnIp5dxxg==}
 
   napi-postinstall@0.3.4:
     resolution: {integrity: sha512-PHI5f1O0EP5xJ9gQmFGMS6IZcrVvTjpXjz7Na41gTE7eE2hK11lg04CECCYEEjdc17EV4DO+fkGEtt7TpTaTiQ==}
@@ -3306,11 +3306,11 @@ snapshots:
 
   flat-cache@3.2.0:
     dependencies:
-      flatted: 3.3.3
+      flatted: 3.4.0
       keyv: 4.5.4
       rimraf: 3.0.2
 
-  flatted@3.3.3: {}
+  flatted@3.4.0: {}
 
   for-each@0.3.5:
     dependencies:
@@ -3886,7 +3886,7 @@ snapshots:
 
   json5@2.2.3: {}
 
-  jsonrepair@3.13.1: {}
+  jsonrepair@3.13.2: {}
 
   jssha@3.3.1: {}
 
@@ -3996,7 +3996,7 @@ snapshots:
 
   ms@2.1.3: {}
 
-  n8n-workflow@2.10.1:
+  n8n-workflow@2.11.1:
     dependencies:
       '@n8n/errors': 0.6.0
       '@n8n/tournament': 1.0.6
@@ -4006,7 +4006,7 @@ snapshots:
       form-data: 4.0.4
       jmespath: 0.16.0
       js-base64: 3.7.2
-      jsonrepair: 3.13.1
+      jsonrepair: 3.13.2
       jssha: 3.3.1
       lodash: 4.17.23
       luxon: 3.7.2

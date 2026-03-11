@@ -6,11 +6,10 @@ describe('Resource description', () => {
 		const resourceProperty = getProperty(resources, 'resource');
 		expect(resourceProperty).toBeDefined();
 		expect(resourceProperty?.default).toBe('dailyNote');
-		expect(getOptions(resourceProperty).map((option) => option.value).sort()).toEqual([
-			'dailyNote',
-			'search',
-			'space',
-			'weblink',
-		]);
+		expect(
+			getOptions(resourceProperty)
+				.map((option) => option.value)
+				.sort(),
+		).toEqual(['dailyNote', 'search', 'space', 'weblink']);
 	});
 });

@@ -1,5 +1,6 @@
 import {
-	IAuthenticateGeneric, Icon,
+	IAuthenticateGeneric,
+	Icon,
 	ICredentialTestRequest,
 	ICredentialType,
 	INodeProperties,

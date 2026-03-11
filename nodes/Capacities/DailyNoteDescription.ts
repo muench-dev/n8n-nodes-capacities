@@ -23,7 +23,7 @@ export const dailyNote: INodeProperties[] = [
 							spaceId: '={{$parameter.spaceId}}',
 							mdText: '={{$parameter.mdText}}',
 							commandPalette: '={{$parameter.commandPalette}}',
-							noTimeStamp: '={{$parameter.timestamp ? false : true}}',
+							noTimeStamp: '={{!$parameter.timestamp}}',
 						},
 					},
 				},

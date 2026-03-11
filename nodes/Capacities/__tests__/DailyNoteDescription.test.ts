@@ -6,7 +6,9 @@ describe('DailyNote description', () => {
 	it('provides save operation wired to POST /save-to-daily-note', () => {
 		const operationProperty = getProperty(dailyNote, 'operation', 'dailyNote');
 		expect(operationProperty).toBeDefined();
-		const saveOption = getOptions(operationProperty).find((option) => option.value === 'saveToDailyNote');
+		const saveOption = getOptions(operationProperty).find(
+			(option) => option.value === 'saveToDailyNote',
+		);
 		expect(saveOption?.routing?.request).toMatchObject({
 			url: '/save-to-daily-note',
 			method: 'POST',

@@ -1,5 +1,5 @@
 import type { INodeProperties } from 'n8n-workflow';
-import {loadSpaces} from "./GeneralFunctions";
+import { loadSpaces } from './GeneralFunctions';
 
 export const weblink: INodeProperties[] = [
 	{
@@ -24,14 +24,12 @@ export const weblink: INodeProperties[] = [
 							url: '={{$parameter.url}}',
 						},
 					},
-				}
+				},
 			},
 		],
 		displayOptions: {
 			show: {
-				resource: [
-					'weblink',
-				],
+				resource: ['weblink'],
 			},
 		},
 	},
@@ -44,12 +42,8 @@ export const weblink: INodeProperties[] = [
 		default: '',
 		displayOptions: {
 			show: {
-				resource: [
-					'weblink',
-				],
-				operation: [
-					'save',
-				],
+				resource: ['weblink'],
+				operation: ['save'],
 			},
 		},
 	},
@@ -64,12 +58,8 @@ export const weblink: INodeProperties[] = [
 		default: '',
 		displayOptions: {
 			show: {
-				resource: [
-					'weblink',
-				],
-				operation: [
-					'save',
-				],
+				resource: ['weblink'],
+				operation: ['save'],
 			},
 		},
 	},
@@ -92,9 +82,9 @@ export const weblink: INodeProperties[] = [
 					request: {
 						body: {
 							mdText: '={{$value}}',
-						}
-					}
-				}
+						},
+					},
+				},
 			},
 			{
 				displayName: 'Title Overwrite',
@@ -107,9 +97,9 @@ export const weblink: INodeProperties[] = [
 					request: {
 						body: {
 							titleOverwrite: '={{$value}}',
-						}
-					}
-				}
+						},
+					},
+				},
 			},
 			{
 				displayName: 'Description Overwrite',
@@ -122,9 +112,9 @@ export const weblink: INodeProperties[] = [
 					request: {
 						body: {
 							descriptionOverwrite: '={{$value}}',
-						}
-					}
-				}
+						},
+					},
+				},
 			},
 			{
 				displayName: 'Tags',
@@ -140,19 +130,15 @@ export const weblink: INodeProperties[] = [
 					request: {
 						body: {
 							tags: '={{$value}}',
-						}
-					}
-				}
+						},
+					},
+				},
 			},
 		],
 		displayOptions: {
 			show: {
-				resource: [
-					'weblink',
-				],
-				operation: [
-					'save',
-				],
+				resource: ['weblink'],
+				operation: ['save'],
 			},
 		},
 	},

@@ -1,5 +1,5 @@
-import type  { INodeProperties } from 'n8n-workflow';
-import {loadSpaces} from "./GeneralFunctions";
+import type { INodeProperties } from 'n8n-workflow';
+import { loadSpaces } from './GeneralFunctions';
 
 export const dailyNote: INodeProperties[] = [
 	{
@@ -13,7 +13,7 @@ export const dailyNote: INodeProperties[] = [
 			{
 				name: 'Save',
 				value: 'saveToDailyNote',
-				description: 'Save text to today\'s daily note',
+				description: "Save text to today's daily note",
 				routing: {
 					request: {
 						url: '/save-to-daily-note',
@@ -28,13 +28,11 @@ export const dailyNote: INodeProperties[] = [
 					},
 				},
 				action: 'Save a daily note',
-			}
+			},
 		],
 		displayOptions: {
 			show: {
-				resource: [
-					'dailyNote',
-				],
+				resource: ['dailyNote'],
 			},
 		},
 	},
@@ -64,30 +62,22 @@ export const dailyNote: INodeProperties[] = [
 		required: true,
 		displayOptions: {
 			show: {
-				resource: [
-					'dailyNote',
-				],
-				operation: [
-					'saveToDailyNote',
-				],
+				resource: ['dailyNote'],
+				operation: ['saveToDailyNote'],
 			},
 		},
 	},
 	{
-		displayName: "Timestamp",
-		name: "timestamp",
-		type: "boolean",
+		displayName: 'Timestamp',
+		name: 'timestamp',
+		type: 'boolean',
 		default: true,
-		description: "Whether to add a timestamp to the note",
+		description: 'Whether to add a timestamp to the note',
 		displayOptions: {
 			show: {
-				resource: [
-					'dailyNote',
-				],
-				operation: [
-					'saveToDailyNote',
-				],
+				resource: ['dailyNote'],
+				operation: ['saveToDailyNote'],
 			},
 		},
-	}
+	},
 ];

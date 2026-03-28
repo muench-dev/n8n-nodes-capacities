@@ -45,7 +45,7 @@ describe('loadSpaces descriptor', () => {
 				}),
 				expect.objectContaining({ type: 'setKeyValue' }),
 				expect.objectContaining({ type: 'sort' }),
-		]),
+			]),
 		);
 	});
 });
@@ -56,7 +56,10 @@ describe('loadStructures helper', () => {
 	});
 
 	it('returns an empty list without hitting the API when no space is selected', async () => {
-		const { context, requestMock } = createLoadStructuresContext({ currentSelection: undefined, fallbackSelection: [] });
+		const { context, requestMock } = createLoadStructuresContext({
+			currentSelection: undefined,
+			fallbackSelection: [],
+		});
 		const result = await loadStructures.call(context);
 		expect(result).toEqual([]);
 		expect(requestMock).not.toHaveBeenCalled();
@@ -69,9 +72,7 @@ describe('loadStructures helper', () => {
 			responses: [
 				{
 					spaceInfo: {
-						structures: [
-							{ id: 'solo-structure', name: 'Solo' },
-						],
+						structures: [{ id: 'solo-structure', name: 'Solo' }],
 					},
 				},
 			],
@@ -112,9 +113,7 @@ describe('loadStructures helper', () => {
 						},
 					},
 					data: {
-						structures: [
-							{ id: 'structure-d', name: 'Delta' },
-						],
+						structures: [{ id: 'structure-d', name: 'Delta' }],
 					},
 				},
 			],
@@ -131,11 +130,11 @@ describe('loadStructures helper', () => {
 			'capacitiesApi',
 			expect.objectContaining({ qs: { spaceid: 'space-beta' } }),
 		);
-			expect(result).toEqual([
-				{ name: 'Alpha (Space-Alpha)', value: 'structure-a' },
-				{ name: 'Beta (Space-Alpha)', value: 'structure-b' },
-				{ name: 'Delta (Space-Beta)', value: 'structure-d' },
-				{ name: 'Gamma (Space-Beta)', value: 'structure-c' },
+		expect(result).toEqual([
+			{ name: 'Alpha (Space-Alpha)', value: 'structure-a' },
+			{ name: 'Beta (Space-Alpha)', value: 'structure-b' },
+			{ name: 'Delta (Space-Beta)', value: 'structure-d' },
+			{ name: 'Gamma (Space-Beta)', value: 'structure-c' },
 		]);
 	});
 });

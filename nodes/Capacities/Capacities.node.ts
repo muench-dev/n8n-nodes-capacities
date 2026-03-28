@@ -1,4 +1,4 @@
-import type {INodeType, INodeTypeDescription} from 'n8n-workflow';
+import type { INodeType, INodeTypeDescription } from 'n8n-workflow';
 import { resources } from './ResourceDescription';
 import { general } from './GeneralDescription';
 import { space } from './SpaceDescription';
@@ -32,7 +32,7 @@ export class Capacities implements INodeType {
 		credentials: [
 			{
 				name: 'capacitiesApi',
-				required: false,
+				required: true,
 			},
 		],
 		requestDefaults: {
@@ -43,13 +43,6 @@ export class Capacities implements INodeType {
 				'Content-Type': 'application/json',
 			},
 		},
-		properties: [
-			...resources,
-			...space,
-			...search,
-			...weblink,
-			...dailyNote,
-			...general,
-		],
+		properties: [...resources, ...space, ...search, ...weblink, ...dailyNote, ...general],
 	};
 }

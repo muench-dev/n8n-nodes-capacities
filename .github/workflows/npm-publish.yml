@@ -7,38 +7,24 @@ on:
   release:
     types: [created]
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 22
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-      - name: Build
-        run: pnpm build
+permissions:
+  id-token: write # Required for OIDC
+  contents: read
 
+jobs:
   publish-npm:
-    needs: build
     runs-on: ubuntu-latest
     permissions:
       id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v6
         with:
-          node-version: 22
-          registry-url: https://registry.npmjs.org/
+          node-version: 24
+          cache: pnpm
       - name: Install dependencies
-        run: pnpm install
-      - name: Build
-        run: pnpm build
+        run: pnpm install --frozen-lockfile
       - name: Publish
         shell: bash
-        run: pnpm publish --access public --no-git-checks
-        env:
-          NPM_CONFIG_PROVENANCE: true
+        run: pnpm build && npm publish --access public --provenance

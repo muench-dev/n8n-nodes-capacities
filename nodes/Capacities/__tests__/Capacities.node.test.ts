@@ -17,16 +17,23 @@ describe('Capacities node', () => {
 		const node = new Capacities();
 		const resourceProperty = getProperty(node.description.properties, 'resource');
 		expect(resourceProperty?.type).toBe('options');
-		expect(getOptions(resourceProperty).map((option) => option.value).sort()).toEqual([
-			'dailyNote',
-			'search',
-			'space',
-			'weblink',
-		]);
+		expect(
+			getOptions(resourceProperty)
+				.map((option) => option.value)
+				.sort(),
+		).toEqual(['dailyNote', 'search', 'space', 'weblink']);
 	});
 
 	it('registers loadStructures helper for load options', () => {
 		const node = new Capacities();
 		expect(node.methods.loadOptions.loadStructures).toBeDefined();
+	});
+
+	it('requires capacitiesApi credentials', () => {
+		const node = new Capacities();
+		expect(node.description.credentials).toContainEqual({
+			name: 'capacitiesApi',
+			required: true,
+		});
 	});
 });

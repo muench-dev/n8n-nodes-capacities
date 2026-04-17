@@ -17,8 +17,9 @@ export const getProperty = (
 	});
 
 export const getOptions = (property?: INodeProperties): INodePropertyOptions[] =>
-	(property?.options ?? []).filter((option): option is INodePropertyOptions =>
-		typeof (option as INodePropertyOptions).value === 'string',
+	(property?.options ?? []).filter(
+		(option): option is INodePropertyOptions =>
+			typeof (option as INodePropertyOptions).value === 'string',
 	);
 
 export const getCollectionOption = (

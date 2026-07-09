@@ -48,5 +48,13 @@ module.exports = {
 				'n8n-nodes-base/node-param-fixed-collection-type-unsorted-items': 'off',
 			},
 		},
+		{
+			files: ['./nodes/Capacities/beta/CapacitiesBeta.node.ts'],
+			plugins: ['eslint-plugin-n8n-nodes-base'],
+			rules: {
+				// Rule only strips a trailing `V<n>` version suffix, not `Beta`.
+				'n8n-nodes-base/node-filename-against-convention': 'off',
+			},
+		},
 	],
 };

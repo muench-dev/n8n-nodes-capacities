@@ -1,9 +1,9 @@
-import { Capacities } from '../Capacities.node';
+import { CapacitiesBeta } from '../CapacitiesBeta.node';
 import { getOptions, getProperty } from './testUtils';
 
-describe('Capacities node', () => {
+describe('CapacitiesBeta node', () => {
 	it('exposes Capacities API defaults', () => {
-		const node = new Capacities();
+		const node = new CapacitiesBeta();
 		expect(node.description.requestDefaults).toMatchObject({
 			baseURL: 'https://api.capacities.io',
 			headers: {
@@ -14,7 +14,7 @@ describe('Capacities node', () => {
 	});
 
 	it('includes resource selector across all supported resources', () => {
-		const node = new Capacities();
+		const node = new CapacitiesBeta();
 		const resourceProperty = getProperty(node.description.properties, 'resource');
 		expect(resourceProperty?.type).toBe('options');
 		expect(getOptions(resourceProperty).map((option) => option.value).sort()).toEqual([
@@ -26,7 +26,7 @@ describe('Capacities node', () => {
 	});
 
 	it('registers loadStructures helper for load options', () => {
-		const node = new Capacities();
+		const node = new CapacitiesBeta();
 		expect(node.methods.loadOptions.loadStructures).toBeDefined();
 	});
 });

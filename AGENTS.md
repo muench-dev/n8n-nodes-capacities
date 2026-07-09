@@ -1,7 +1,7 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-- `nodes/Capacities/*.ts` houses the TypeScript descriptions and helpers that surface Capacities resources in n8n; keep new operations grouped by resource and export them through `ResourceDescription.ts`.
+- `nodes/Capacities/Capacities.node.ts` is a `VersionedNodeType` router only. The actual implementations live in `nodes/Capacities/beta/` (typeVersion 1, deprecated Capacities Beta API, kept for existing workflows) and `nodes/Capacities/v1/` (typeVersion 2, current Capacities v1 API, default for new nodes). Keep new operations grouped by resource and exported through each version's own `ResourceDescription.ts`. Only add new features to `v1/`; `beta/` should stay frozen until the Capacities Beta API is retired (2026-09-01), at which point it can be deleted.
 - `credentials/CapacitiesApi.credentials.ts` defines the shared bearer-token credential; extend it when additional auth fields are required.
 - `dist/` contains the compiled JavaScript that ships to npm. Never edit generated files directly—run a build instead. `index.js` simply exposes the built bundles.
 - Top-level configs such as `tsconfig.json`, `.eslintrc.js`, and `.prettierrc.js` govern compilation, linting, and formatting; keep changes coordinated.
@@ -27,7 +27,7 @@ Stick to one package manager per branch; pnpm is preferred and the lockfile is t
 - Treat linting as the first test gate; run `pnpm lint` before every push.
 - For new operations, add n8n credential tests when possible by enhancing the `test` block in the credential file.
 - Document any manual smoke tests in the PR when UI flows change.
-- Jest suites live under `nodes/Capacities/__tests__`; they mock Capacities API calls via `requestWithAuthentication` stubs to keep tests unit-scoped.
+- Jest suites live under `nodes/Capacities/beta/__tests__` and `nodes/Capacities/v1/__tests__`; they mock Capacities API calls via `requestWithAuthentication` stubs to keep tests unit-scoped.
 - Run `pnpm test` (ts-jest) to execute the node description and helper coverage:
 ```bash
 pnpm test
@@ -41,3 +41,4 @@ pnpm test
 ## Security & Configuration Tips
 - Never commit bearer tokens; rely on n8n credential storage and reference them through `capacitiesApi`.
 - Validate new endpoints against `https://api.capacities.io` rates and update request defaults if base URLs change.
+- The `beta/` and `v1/` implementations call different Capacities API generations (see `README.md`); confirm which one you're changing before editing.

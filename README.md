@@ -2,7 +2,16 @@
 
 # n8n-nodes-capacities
 
-This repository contains the code for the n8n nodes that interact with the [Capacities API](https://docs.capacities.io/developer/api).
+This repository contains the code for the n8n nodes that interact with the [Capacities API](https://developers.capacities.io).
+
+## API Versions
+
+This node ships two versions side by side:
+
+- **v2 (default for new nodes)** talks to the current [Capacities v1 API](https://developers.capacities.io/api/overview/migration). Tokens are scoped to a single space, so there's no more Space ID selector. Note: the new `/object/url` endpoint has no `tags` parameter, so Weblink tags aren't supported in this version.
+- **v1 (legacy, kept for existing workflows)** talks to the deprecated Capacities Beta API. Workflows created before this update keep using it unchanged. Capacities is retiring the Beta API on **2026-09-01** — after that date, `v1`-typed nodes will stop working and existing workflows should be re-saved with a new Capacities node (or have their node version bumped) to pick up `v2`.
+
+If you're building a new workflow, use a fresh Capacities node and a personal API token generated under **Settings → Capacities API** in the desktop app.
 
 ## Installation
 
@@ -18,15 +27,14 @@ pnpm add @muench-dev/n8n-nodes-capacities
 ## Node Features
 
 - Space operations
-	- List all spaces in the authenticated Capacities account
-	- Retrieve structure metadata for a specific space
+	- Get the space the API token is scoped to
+	- Retrieve structure metadata for the space
 - Search operations
-	- Query notes, bookmarks, or other content within selected spaces
-	- Filter results by Capacities structure types
+	- Query notes, bookmarks, or other content, optionally filtered by structure type
 - Weblink operations
-	- Save URLs into Capacities, including optional markdown, title overrides, descriptions, and tags
+	- Save URLs into Capacities, including optional markdown, title, and description overrides
 - Daily note operations
-	- Append markdown to today’s daily note, optionally skipping the automatic timestamp
+	- Append markdown to a daily note, optionally skipping the automatic timestamp or targeting a specific date
 
 ## Screenshots
 

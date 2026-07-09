@@ -8,3 +8,4 @@ yarn.lock
 package-lock.json
 .vscode/launch.json
 .idea
+.tokensave

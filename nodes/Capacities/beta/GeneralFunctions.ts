@@ -29,8 +29,8 @@ export const loadSpaces: ILoadOptions = {
 					},
 				},
 			],
-		}
-	}
+		},
+	},
 };
 
 export async function loadStructures(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
@@ -111,7 +111,8 @@ export async function loadStructures(this: ILoadOptionsFunctions): Promise<INode
 
 			const structureName = typeof displayNameSource === 'string' ? displayNameSource : idValue;
 			const spaceLabel = formatSpaceContext(spaceId);
-			const nameWithContext = spaceIds.length > 1 ? `${structureName} (${spaceLabel})` : structureName;
+			const nameWithContext =
+				spaceIds.length > 1 ? `${structureName} (${spaceLabel})` : structureName;
 			if (!structureLabelById.has(idValue)) {
 				structureLabelById.set(idValue, nameWithContext);
 			}

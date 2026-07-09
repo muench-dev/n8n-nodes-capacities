@@ -19,4 +19,14 @@ describe('Capacities node router', () => {
 		const node = new Capacities();
 		expect(node.getNodeType()).toBeInstanceOf(CapacitiesV1);
 	});
+
+	it('requires capacitiesApi credentials on every version', () => {
+		const node = new Capacities();
+		for (const version of [1, 2]) {
+			expect(node.getNodeType(version).description.credentials).toContainEqual({
+				name: 'capacitiesApi',
+				required: true,
+			});
+		}
+	});
 });

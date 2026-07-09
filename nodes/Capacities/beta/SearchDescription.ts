@@ -33,59 +33,48 @@ export const search: INodeProperties[] = [
 								},
 							},
 						],
-					}
+					},
 				},
 				action: 'Search',
 			},
 		],
 		displayOptions: {
 			show: {
-				resource: [
-					'search',
-				],
+				resource: ['search'],
 			},
 		},
 	},
 
 	{
-		displayName: "Search Term",
-		name: "searchTerm",
-		type: "string",
+		displayName: 'Search Term',
+		name: 'searchTerm',
+		type: 'string',
 		required: true,
-		default: "",
+		default: '',
 		description: 'The term to search for',
 		displayOptions: {
 			show: {
-				resource: [
-					'search',
-				],
-				operation: [
-					'search',
-				],
+				resource: ['search'],
+				operation: ['search'],
 			},
-		}
+		},
 	},
 	{
-		displayName: "Space",
-		name: "searchSpaceId",
-		type: "options",
+		displayName: 'Space',
+		name: 'searchSpaceId',
+		type: 'options',
 		typeOptions: {
 			emptyValue: 'Please select a space',
 			loadOptions: loadSpaces,
 		},
 		default: '',
-		placeholder: "Select a Space",
+		placeholder: 'Select a Space',
 		description: 'The ID of the space to search in. Leave empty to search all spaces.',
 		displayOptions: {
 			show: {
-				resource: [
-					'search',
-				],
-				operation: [
-					'search',
-				],
+				resource: ['search'],
+				operation: ['search'],
 			},
 		},
 	},
-
 ];

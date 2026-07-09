@@ -32,7 +32,7 @@ export class CapacitiesV1 implements INodeType {
 		credentials: [
 			{
 				name: 'capacitiesApi',
-				required: false,
+				required: true,
 			},
 		],
 		requestDefaults: {

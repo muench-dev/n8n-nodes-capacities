@@ -17,7 +17,7 @@ export class CapacitiesV2 implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Capacities',
 		name: 'capacities',
-		icon: 'file:../capacities.svg',
+		icon: 'file:capacities.svg',
 		group: ['transform'],
 		version: 2,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',

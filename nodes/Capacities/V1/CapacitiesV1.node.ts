@@ -19,7 +19,7 @@ export class CapacitiesV1 implements INodeType {
 		name: 'capacities',
 		icon: 'file:../capacities.svg',
 		group: ['transform'],
-		version: 2,
+		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
 		description: 'Interact with Capacities API',
 		defaults: {

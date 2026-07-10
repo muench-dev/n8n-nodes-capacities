@@ -1,7 +1,7 @@
 import type { INodeTypeBaseDescription, IVersionedNodeType } from 'n8n-workflow';
 import { VersionedNodeType } from 'n8n-workflow';
-import { CapacitiesBeta } from './beta/CapacitiesBeta.node';
-import { CapacitiesV1 } from './v1/CapacitiesV1.node';
+import { CapacitiesV1 } from './V1/CapacitiesV1.node';
+import { CapacitiesV2 } from './V2/CapacitiesV2.node';
 
 export class Capacities extends VersionedNodeType {
 	constructor() {
@@ -15,8 +15,8 @@ export class Capacities extends VersionedNodeType {
 		};
 
 		const nodeVersions: IVersionedNodeType['nodeVersions'] = {
-			1: new CapacitiesBeta(),
-			2: new CapacitiesV1(),
+			1: new CapacitiesV1(),
+			2: new CapacitiesV2(),
 		};
 
 		super(nodeVersions, baseDescription);

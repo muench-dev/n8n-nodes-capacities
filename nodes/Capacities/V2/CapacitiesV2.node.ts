@@ -7,7 +7,7 @@ import { weblink } from './WeblinkDescription';
 import { dailyNote } from './DailyNoteDescription';
 import { loadStructures } from './GeneralFunctions';
 
-export class CapacitiesBeta implements INodeType {
+export class CapacitiesV2 implements INodeType {
 	methods = {
 		loadOptions: {
 			loadStructures,
@@ -19,7 +19,7 @@ export class CapacitiesBeta implements INodeType {
 		name: 'capacities',
 		icon: 'file:../capacities.svg',
 		group: ['transform'],
-		version: 1,
+		version: 2,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
 		description: 'Interact with Capacities API',
 		defaults: {

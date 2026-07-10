@@ -1,6 +1,6 @@
 import { Capacities } from '../Capacities.node';
-import { CapacitiesBeta } from '../beta/CapacitiesBeta.node';
-import { CapacitiesV1 } from '../v1/CapacitiesV1.node';
+import { CapacitiesV1 } from '../V1/CapacitiesV1.node';
+import { CapacitiesV2 } from '../V2/CapacitiesV2.node';
 
 describe('Capacities node router', () => {
 	it('defaults new nodes to the v1 API implementation', () => {
@@ -11,13 +11,13 @@ describe('Capacities node router', () => {
 
 	it('keeps the Beta implementation available for existing workflows', () => {
 		const node = new Capacities();
-		expect(node.getNodeType(1)).toBeInstanceOf(CapacitiesBeta);
-		expect(node.getNodeType(2)).toBeInstanceOf(CapacitiesV1);
+		expect(node.getNodeType(1)).toBeInstanceOf(CapacitiesV1);
+		expect(node.getNodeType(2)).toBeInstanceOf(CapacitiesV2);
 	});
 
 	it('resolves the default version when none is requested', () => {
 		const node = new Capacities();
-		expect(node.getNodeType()).toBeInstanceOf(CapacitiesV1);
+		expect(node.getNodeType()).toBeInstanceOf(CapacitiesV2);
 	});
 
 	it('requires capacitiesApi credentials on every version', () => {

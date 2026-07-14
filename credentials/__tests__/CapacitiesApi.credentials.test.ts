@@ -5,7 +5,7 @@ describe('CapacitiesApi credentials', () => {
 		const credentials = new CapacitiesApi();
 		expect(credentials.name).toBe('capacitiesApi');
 		expect(credentials.displayName).toBe('Capactities API');
-		expect(credentials.documentationUrl).toBe('https://docs.capacities.io/developer/api');
+		expect(credentials.documentationUrl).toBe('https://developers.capacities.io/api/overview');
 		expect(credentials.icon).toBe('node:@muench-dev/n8n-nodes-capacities.capacities');
 	});
 
@@ -36,7 +36,7 @@ describe('CapacitiesApi credentials', () => {
 		expect(credentials.test).toMatchObject({
 			request: {
 				baseURL: 'https://api.capacities.io',
-				url: '/spaces',
+				url: '/space',
 			},
 		});
 	});

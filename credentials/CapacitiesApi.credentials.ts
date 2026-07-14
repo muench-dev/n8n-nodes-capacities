@@ -9,7 +9,7 @@ import {
 export class CapacitiesApi implements ICredentialType {
 	name = 'capacitiesApi';
 	displayName = 'Capactities API';
-	documentationUrl = 'https://docs.capacities.io/developer/api';
+	documentationUrl = 'https://developers.capacities.io/api/overview';
 	icon = 'node:@muench-dev/n8n-nodes-capacities.capacities' as Icon;
 	properties: INodeProperties[] = [
 		{
@@ -40,7 +40,7 @@ export class CapacitiesApi implements ICredentialType {
 	test: ICredentialTestRequest = {
 		request: {
 			baseURL: 'https://api.capacities.io',
-			url: '/spaces',
+			url: '/space',
 		},
 	};
 }

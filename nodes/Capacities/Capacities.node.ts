@@ -1,48 +1,24 @@
-import type { INodeType, INodeTypeDescription } from 'n8n-workflow';
-import { resources } from './ResourceDescription';
-import { general } from './GeneralDescription';
-import { space } from './SpaceDescription';
-import { search } from './SearchDescription';
-import { weblink } from './WeblinkDescription';
-import { dailyNote } from './DailyNoteDescription';
-import { loadStructures } from './GeneralFunctions';
+import type { INodeTypeBaseDescription, IVersionedNodeType } from 'n8n-workflow';
+import { VersionedNodeType } from 'n8n-workflow';
+import { CapacitiesV1 } from './V1/CapacitiesV1.node';
+import { CapacitiesV2 } from './V2/CapacitiesV2.node';
 
-export class Capacities implements INodeType {
-	methods = {
-		loadOptions: {
-			loadStructures,
-		},
-	};
+export class Capacities extends VersionedNodeType {
+	constructor() {
+		const baseDescription: INodeTypeBaseDescription = {
+			displayName: 'Capacities',
+			name: 'capacities',
+			icon: 'file:capacities.svg',
+			group: ['transform'],
+			description: 'Interact with Capacities API',
+			defaultVersion: 2,
+		};
 
-	description: INodeTypeDescription = {
-		displayName: 'Capacities',
-		name: 'capacities',
-		icon: 'file:capacities.svg',
-		group: ['transform'],
-		version: 1,
-		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: 'Interact with Capacities API',
-		defaults: {
-			name: 'Capacities',
-		},
-		// @ts-ignore
-		inputs: ['main'],
-		// @ts-ignore
-		outputs: ['main'],
-		credentials: [
-			{
-				name: 'capacitiesApi',
-				required: true,
-			},
-		],
-		requestDefaults: {
-			baseURL: 'https://api.capacities.io',
-			url: '',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-			},
-		},
-		properties: [...resources, ...space, ...search, ...weblink, ...dailyNote, ...general],
-	};
+		const nodeVersions: IVersionedNodeType['nodeVersions'] = {
+			1: new CapacitiesV1(),
+			2: new CapacitiesV2(),
+		};
+
+		super(nodeVersions, baseDescription);
+	}
 }

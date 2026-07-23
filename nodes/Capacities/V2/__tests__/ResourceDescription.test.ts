@@ -10,6 +10,7 @@ describe('Resource description (v1)', () => {
 			'dailyNote',
 			'search',
 			'space',
+			'tag',
 			'weblink',
 		]);
 	});

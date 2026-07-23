@@ -22,7 +22,7 @@ export const weblink: INodeProperties[] = [
 							url: '={{$parameter.url}}',
 							markdown: '={{$parameter.weblinkOptions.markdown || undefined}}',
 							properties:
-								'={{(() => { const o = $parameter.weblinkOptions; const p = {}; if (o.titleOverwrite) { p.title = { type: "title", title: { value: o.titleOverwrite } }; } if (o.descriptionOverwrite) { p.description = { type: "text", text: { value: o.descriptionOverwrite } }; } return Object.keys(p).length ? p : undefined; })()}}',
+								'={{(() => { const o = $parameter.weblinkOptions; const p = {}; if (o.titleOverwrite) { p.title = { type: "title", title: { value: o.titleOverwrite } }; } if (o.descriptionOverwrite) { p.description = { type: "text", text: { value: o.descriptionOverwrite } }; } const tagIds = Array.isArray(o.tagIds) ? o.tagIds.filter(Boolean) : (o.tagIds ? [o.tagIds] : []); if (tagIds.length) { p.tags = { type: "entity", entity: tagIds.map((id) => ({ id })) }; } return Object.keys(p).length ? p : undefined; })()}}',
 						},
 					},
 				},
@@ -79,6 +79,17 @@ export const weblink: INodeProperties[] = [
 				description: 'The description of the weblink',
 				hint: 'If empty, the description will be fetched from the URL',
 				default: '',
+			},
+			{
+				displayName: 'Tag IDs',
+				name: 'tagIds',
+				type: 'string',
+				typeOptions: {
+					multipleValues: true,
+					multipleValueButtonText: 'Add Tag ID',
+				},
+				default: '',
+				description: 'Existing RootTag object IDs to assign to the weblink',
 			},
 		],
 		displayOptions: {

@@ -5,6 +5,7 @@ import { space } from './SpaceDescription';
 import { search } from './SearchDescription';
 import { weblink } from './WeblinkDescription';
 import { dailyNote } from './DailyNoteDescription';
+import { tag } from './TagDescription';
 import { loadStructures } from './GeneralFunctions';
 
 export class CapacitiesV2 implements INodeType {
@@ -43,6 +44,6 @@ export class CapacitiesV2 implements INodeType {
 				'Content-Type': 'application/json',
 			},
 		},
-		properties: [...resources, ...space, ...search, ...weblink, ...dailyNote, ...general],
+		properties: [...resources, ...space, ...search, ...weblink, ...dailyNote, ...tag, ...general],
 	};
 }

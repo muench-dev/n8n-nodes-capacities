@@ -22,6 +22,7 @@ describe('CapacitiesV2 node', () => {
 			'dailyNote',
 			'search',
 			'space',
+			'tag',
 			'weblink',
 		]);
 	});

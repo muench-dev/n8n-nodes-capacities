@@ -20,7 +20,7 @@ describe('Weblink description (v2)', () => {
 		expect(getProperty(weblink, 'spaceId', 'weblink')).toBeUndefined();
 	});
 
-	it('exposes Markdown, Title Overwrite, Description Overwrite, and Tag IDs', () => {
+	it('exposes Markdown, Title Overwrite, Description Overwrite, and selectable Tags', () => {
 		const optionsProperty = getProperty(weblink, 'weblinkOptions', 'weblink');
 		expect(optionsProperty?.type).toBe('collection');
 		const names = (optionsProperty?.options ?? []).map(
@@ -29,6 +29,17 @@ describe('Weblink description (v2)', () => {
 		expect(names).toEqual(
 			expect.arrayContaining(['markdown', 'titleOverwrite', 'descriptionOverwrite', 'tagIds']),
 		);
+
+		const tagOption = (optionsProperty?.options ?? []).find(
+			(option) => (option as { name: string }).name === 'tagIds',
+		) as { type?: string; typeOptions?: { loadOptionsMethod?: string } } | undefined;
+
+		expect(tagOption).toMatchObject({
+			type: 'multiOptions',
+			typeOptions: {
+				loadOptionsMethod: 'loadTags',
+			},
+		});
 	});
 
 	it('maps Tag IDs to the v1 entity property shape', () => {

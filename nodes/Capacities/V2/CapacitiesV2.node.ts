@@ -6,12 +6,13 @@ import { search } from './SearchDescription';
 import { weblink } from './WeblinkDescription';
 import { dailyNote } from './DailyNoteDescription';
 import { tag } from './TagDescription';
-import { loadStructures } from './GeneralFunctions';
+import { loadStructures, loadTags } from './GeneralFunctions';
 
 export class CapacitiesV2 implements INodeType {
 	methods = {
 		loadOptions: {
 			loadStructures,
+			loadTags,
 		},
 	};
 

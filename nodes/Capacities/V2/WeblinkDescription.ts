@@ -81,15 +81,15 @@ export const weblink: INodeProperties[] = [
 				default: '',
 			},
 			{
-				displayName: 'Tag IDs',
+				displayName: 'Tag Names or IDs',
 				name: 'tagIds',
-				type: 'string',
+				type: 'multiOptions',
 				typeOptions: {
-					multipleValues: true,
-					multipleValueButtonText: 'Add Tag ID',
+					loadOptionsMethod: 'loadTags',
 				},
-				default: '',
-				description: 'Existing RootTag object IDs to assign to the weblink',
+				default: [],
+				description:
+					'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
 			},
 		],
 		displayOptions: {

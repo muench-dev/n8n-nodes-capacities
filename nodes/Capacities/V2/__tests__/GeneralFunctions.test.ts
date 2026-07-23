@@ -1,6 +1,6 @@
 import type { ILoadOptionsFunctions } from 'n8n-workflow';
 
-import { loadStructures } from '../GeneralFunctions';
+import { loadStructures, loadTags } from '../GeneralFunctions';
 
 const createContext = (response: Record<string, unknown>) => {
 	const requestMock = jest.fn().mockResolvedValue(response);
@@ -36,6 +36,37 @@ describe('loadStructures helper (v1)', () => {
 		expect(result).toEqual([
 			{ name: 'Alpha', value: 'structure-a' },
 			{ name: 'Beta', value: 'structure-b' },
+		]);
+	});
+});
+
+describe('loadTags helper (v2)', () => {
+	it('requests RootTag search results and maps id/title pairs', async () => {
+		const { context, requestMock } = createContext({
+			results: [
+				{ id: 'tag-b', title: 'Beta' },
+				{ id: 'tag-a', title: 'Alpha' },
+			],
+		});
+
+		const result = await loadTags.call(context);
+
+		expect(requestMock).toHaveBeenCalledTimes(1);
+		expect(requestMock).toHaveBeenCalledWith(
+			'capacitiesApi',
+			expect.objectContaining({
+				url: '/objects/search',
+				method: 'POST',
+				body: {
+					query: '',
+					structureIds: ['RootTag'],
+					limit: 100,
+				},
+			}),
+		);
+		expect(result).toEqual([
+			{ name: 'Alpha', value: 'tag-a' },
+			{ name: 'Beta', value: 'tag-b' },
 		]);
 	});
 });

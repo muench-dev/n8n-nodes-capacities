@@ -12,12 +12,12 @@ export const resources: INodeProperties[] = [
 				value: 'dailyNote',
 			},
 			{
-				name: 'Space',
-				value: 'space',
-			},
-			{
 				name: 'Search',
 				value: 'search',
+			},
+			{
+				name: 'Space',
+				value: 'space',
 			},
 			{
 				name: 'Tag',

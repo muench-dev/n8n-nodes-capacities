@@ -2,12 +2,24 @@ import type { ILoadOptionsFunctions } from 'n8n-workflow';
 
 import { loadStructures, loadTags } from '../GeneralFunctions';
 
-const createContext = (response: Record<string, unknown>) => {
+const createContext = (response: Record<string, unknown>, tagSearch = '') => {
 	const requestMock = jest.fn().mockResolvedValue(response);
 	const context = {
 		helpers: {
 			requestWithAuthentication: requestMock,
 		},
+		getCurrentNodeParameter: jest.fn((parameterName: string) => {
+			if (parameterName === 'weblinkOptions.tagSearch') {
+				return tagSearch;
+			}
+			return undefined;
+		}),
+		getNodeParameter: jest.fn((parameterName: string, defaultValue: unknown) => {
+			if (parameterName === 'weblinkOptions.tagSearch') {
+				return tagSearch || defaultValue;
+			}
+			return defaultValue;
+		}),
 	} as unknown as ILoadOptionsFunctions;
 
 	return { context, requestMock };
@@ -41,13 +53,25 @@ describe('loadStructures helper (v1)', () => {
 });
 
 describe('loadTags helper (v2)', () => {
+	it('returns no options without hitting the API when no tag search is set', async () => {
+		const { context, requestMock } = createContext({ results: [] });
+
+		const result = await loadTags.call(context);
+
+		expect(result).toEqual([]);
+		expect(requestMock).not.toHaveBeenCalled();
+	});
+
 	it('requests RootTag search results and maps id/title pairs', async () => {
-		const { context, requestMock } = createContext({
-			results: [
-				{ id: 'tag-b', title: 'Beta' },
-				{ id: 'tag-a', title: 'Alpha' },
-			],
-		});
+		const { context, requestMock } = createContext(
+			{
+				results: [
+					{ id: 'tag-b', title: 'Beta' },
+					{ id: 'tag-a', title: 'Alpha' },
+				],
+			},
+			'a',
+		);
 
 		const result = await loadTags.call(context);
 
@@ -58,9 +82,9 @@ describe('loadTags helper (v2)', () => {
 				url: '/objects/search',
 				method: 'POST',
 				body: {
-					query: '',
+					query: 'a',
 					structureIds: ['RootTag'],
-					limit: 100,
+					limit: 50,
 				},
 			}),
 		);

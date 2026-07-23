@@ -27,7 +27,13 @@ describe('Weblink description (v2)', () => {
 			(option) => (option as { name: string }).name,
 		);
 		expect(names).toEqual(
-			expect.arrayContaining(['markdown', 'titleOverwrite', 'descriptionOverwrite', 'tagIds']),
+			expect.arrayContaining([
+				'markdown',
+				'titleOverwrite',
+				'descriptionOverwrite',
+				'tagSearch',
+				'tagIds',
+			]),
 		);
 
 		const tagOption = (optionsProperty?.options ?? []).find(

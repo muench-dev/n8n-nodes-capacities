@@ -32,7 +32,7 @@ pnpm add @muench-dev/n8n-nodes-capacities
 - Search operations
 	- Query notes, bookmarks, or other content, optionally filtered by structure type
 - Weblink operations
-	- Save URLs into Capacities, including optional markdown, title, description, and tag properties
+	- Save URLs into Capacities, including optional markdown, title, description, and searchable tag properties
 - Tag operations
 	- Save tags as `RootTag` objects for later use in object tag properties
 - Daily note operations

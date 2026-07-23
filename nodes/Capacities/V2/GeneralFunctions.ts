@@ -18,15 +18,23 @@ export async function loadStructures(
 }
 
 export async function loadTags(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+	const currentSearch = this.getCurrentNodeParameter('weblinkOptions.tagSearch');
+	const fallbackSearch = this.getNodeParameter('weblinkOptions.tagSearch', '') as string;
+	const query = String(currentSearch ?? fallbackSearch).trim();
+
+	if (!query) {
+		return [];
+	}
+
 	const response = (await this.helpers.requestWithAuthentication.call(this, 'capacitiesApi', {
 		method: 'POST',
 		baseURL: 'https://api.capacities.io',
 		url: '/objects/search',
 		json: true,
 		body: {
-			query: '',
+			query,
 			structureIds: ['RootTag'],
-			limit: 100,
+			limit: 50,
 		},
 	})) as {
 		results: Array<{ id: string; title: string }>;

@@ -57,28 +57,20 @@ export const weblink: INodeProperties[] = [
 		noDataExpression: false,
 		options: [
 			{
-				displayName: 'Markdown',
-				name: 'markdown',
-				type: 'string',
-				default: '',
-				description: 'The markdown text of the weblink',
-				hint: 'Text formatted as markdown that will be added to the notes section',
-			},
-			{
-				displayName: 'Title Overwrite',
-				name: 'titleOverwrite',
-				type: 'string',
-				description: 'The title of the weblink',
-				hint: 'If empty, the title will be fetched from the URL',
-				default: '',
-			},
-			{
 				displayName: 'Description Overwrite',
 				name: 'descriptionOverwrite',
 				type: 'string',
 				description: 'The description of the weblink',
 				hint: 'If empty, the description will be fetched from the URL',
 				default: '',
+			},
+			{
+				displayName: 'Markdown',
+				name: 'markdown',
+				type: 'string',
+				default: '',
+				description: 'The markdown text of the weblink',
+				hint: 'Text formatted as markdown that will be added to the notes section',
 			},
 			{
 				displayName: 'Tag Names or IDs',
@@ -90,6 +82,21 @@ export const weblink: INodeProperties[] = [
 				default: [],
 				description:
 					'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
+			},
+			{
+				displayName: 'Tag Search',
+				name: 'tagSearch',
+				type: 'string',
+				default: '',
+				description: 'Search term used to load existing tags for selection',
+			},
+			{
+				displayName: 'Title Overwrite',
+				name: 'titleOverwrite',
+				type: 'string',
+				description: 'The title of the weblink',
+				hint: 'If empty, the title will be fetched from the URL',
+				default: '',
 			},
 		],
 		displayOptions: {

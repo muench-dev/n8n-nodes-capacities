@@ -8,7 +8,7 @@ This repository contains the code for the n8n nodes that interact with the [Capa
 
 This node ships two versions side by side:
 
-- **v2 (default for new nodes)** talks to the current [Capacities v1 API](https://developers.capacities.io/api/overview/migration). Tokens are scoped to a single space, so there's no more Space ID selector. Note: the new `/object/url` endpoint has no `tags` parameter, so Weblink tags aren't supported in this version.
+- **v2 (default for new nodes)** talks to the current [Capacities v1 API](https://developers.capacities.io/api/overview/migration). Tokens are scoped to a single space, so there's no more Space ID selector. Weblink tags use the v1 property model and are selected from existing `RootTag` objects.
 - **v1 (legacy, kept for existing workflows)** talks to the deprecated Capacities Beta API. Workflows created before this update keep using it unchanged. Capacities is retiring the Beta API on **2026-09-01** — after that date, `v1`-typed nodes will stop working and existing workflows should be re-saved with a new Capacities node (or have their node version bumped) to pick up `v2`.
 
 If you're building a new workflow, use a fresh Capacities node and a personal API token generated under **Settings → Capacities API** in the desktop app.
@@ -32,7 +32,9 @@ pnpm add @muench-dev/n8n-nodes-capacities
 - Search operations
 	- Query notes, bookmarks, or other content, optionally filtered by structure type
 - Weblink operations
-	- Save URLs into Capacities, including optional markdown, title, and description overrides
+	- Save URLs into Capacities, including optional markdown, title, description, and searchable tag properties
+- Tag operations
+	- Save tags as `RootTag` objects for later use in object tag properties
 - Daily note operations
 	- Append markdown to a daily note, optionally skipping the automatic timestamp or targeting a specific date
 

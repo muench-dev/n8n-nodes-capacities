@@ -5,12 +5,14 @@ import { space } from './SpaceDescription';
 import { search } from './SearchDescription';
 import { weblink } from './WeblinkDescription';
 import { dailyNote } from './DailyNoteDescription';
-import { loadStructures } from './GeneralFunctions';
+import { tag } from './TagDescription';
+import { loadStructures, loadTags } from './GeneralFunctions';
 
 export class CapacitiesV2 implements INodeType {
 	methods = {
 		loadOptions: {
 			loadStructures,
+			loadTags,
 		},
 	};
 
@@ -43,6 +45,6 @@ export class CapacitiesV2 implements INodeType {
 				'Content-Type': 'application/json',
 			},
 		},
-		properties: [...resources, ...space, ...search, ...weblink, ...dailyNote, ...general],
+		properties: [...resources, ...space, ...search, ...weblink, ...dailyNote, ...tag, ...general],
 	};
 }

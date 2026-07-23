@@ -22,7 +22,7 @@ export const weblink: INodeProperties[] = [
 							url: '={{$parameter.url}}',
 							markdown: '={{$parameter.weblinkOptions.markdown || undefined}}',
 							properties:
-								'={{(() => { const o = $parameter.weblinkOptions; const p = {}; if (o.titleOverwrite) { p.title = { type: "title", title: { value: o.titleOverwrite } }; } if (o.descriptionOverwrite) { p.description = { type: "text", text: { value: o.descriptionOverwrite } }; } const tagIds = Array.isArray(o.tagIds) ? o.tagIds.filter(Boolean) : (o.tagIds ? [o.tagIds] : []); if (tagIds.length) { p.tags = { type: "entity", entity: tagIds.map((id) => ({ id })) }; } return Object.keys(p).length ? p : undefined; })()}}',
+								'={{(() => { const o = $parameter.weblinkOptions; const p = {}; if (o.titleOverwrite) { p.title = { type: "title", title: { value: o.titleOverwrite } }; } if (o.descriptionOverwrite) { p.description = { type: "text", text: { value: o.descriptionOverwrite } }; } const tags = Array.isArray(o.tags?.values) ? o.tags.values : []; const tagIds = tags.map((tag) => typeof tag.tagId === "object" ? tag.tagId.value : tag.tagId).filter(Boolean); if (tagIds.length) { p.tags = { type: "entity", entity: tagIds.map((id) => ({ id })) }; } return Object.keys(p).length ? p : undefined; })()}}',
 						},
 					},
 				},
@@ -73,22 +73,46 @@ export const weblink: INodeProperties[] = [
 				hint: 'Text formatted as markdown that will be added to the notes section',
 			},
 			{
-				displayName: 'Tag Names or IDs',
-				name: 'tagIds',
-				type: 'multiOptions',
+				displayName: 'Tags',
+				name: 'tags',
+				type: 'fixedCollection',
 				typeOptions: {
-					loadOptionsMethod: 'loadTags',
+					multipleValues: true,
 				},
-				default: [],
-				description:
-					'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
-			},
-			{
-				displayName: 'Tag Search',
-				name: 'tagSearch',
-				type: 'string',
-				default: '',
-				description: 'Search term used to load existing tags for selection',
+				default: {},
+				placeholder: 'Add Tag',
+				options: [
+					{
+						displayName: 'Tag',
+						name: 'values',
+						values: [
+							{
+								displayName: 'Tag Name or ID',
+								name: 'tagId',
+								type: 'resourceLocator',
+								default: { mode: 'list', value: '' },
+								description:
+									'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
+								modes: [
+									{
+										displayName: 'From List',
+										name: 'list',
+										type: 'list',
+										typeOptions: {
+											searchListMethod: 'searchTags',
+											searchFilterRequired: true,
+										},
+									},
+									{
+										displayName: 'By ID',
+										name: 'id',
+										type: 'string',
+									},
+								],
+							},
+						],
+					},
+				],
 			},
 			{
 				displayName: 'Title Overwrite',

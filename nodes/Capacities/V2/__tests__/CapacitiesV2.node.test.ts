@@ -30,6 +30,6 @@ describe('CapacitiesV2 node', () => {
 	it('registers load option helpers', () => {
 		const node = new CapacitiesV2();
 		expect(node.methods.loadOptions.loadStructures).toBeDefined();
-		expect(node.methods.loadOptions.loadTags).toBeDefined();
+		expect(node.methods.listSearch.searchTags).toBeDefined();
 	});
 });

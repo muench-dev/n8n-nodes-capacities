@@ -1,25 +1,13 @@
 import type { ILoadOptionsFunctions } from 'n8n-workflow';
 
-import { loadStructures, loadTags } from '../GeneralFunctions';
+import { loadStructures, searchTags } from '../GeneralFunctions';
 
-const createContext = (response: Record<string, unknown>, tagSearch = '') => {
+const createContext = (response: Record<string, unknown>) => {
 	const requestMock = jest.fn().mockResolvedValue(response);
 	const context = {
 		helpers: {
 			requestWithAuthentication: requestMock,
 		},
-		getCurrentNodeParameter: jest.fn((parameterName: string) => {
-			if (parameterName === 'weblinkOptions.tagSearch') {
-				return tagSearch;
-			}
-			return undefined;
-		}),
-		getNodeParameter: jest.fn((parameterName: string, defaultValue: unknown) => {
-			if (parameterName === 'weblinkOptions.tagSearch') {
-				return tagSearch || defaultValue;
-			}
-			return defaultValue;
-		}),
 	} as unknown as ILoadOptionsFunctions;
 
 	return { context, requestMock };
@@ -52,28 +40,25 @@ describe('loadStructures helper (v1)', () => {
 	});
 });
 
-describe('loadTags helper (v2)', () => {
-	it('returns no options without hitting the API when no tag search is set', async () => {
+describe('searchTags helper (v2)', () => {
+	it('returns no options without hitting the API when no filter is set', async () => {
 		const { context, requestMock } = createContext({ results: [] });
 
-		const result = await loadTags.call(context);
+		const result = await searchTags.call(context);
 
-		expect(result).toEqual([]);
+		expect(result).toEqual({ results: [] });
 		expect(requestMock).not.toHaveBeenCalled();
 	});
 
 	it('requests RootTag search results and maps id/title pairs', async () => {
-		const { context, requestMock } = createContext(
-			{
-				results: [
-					{ id: 'tag-b', title: 'Beta' },
-					{ id: 'tag-a', title: 'Alpha' },
-				],
-			},
-			'a',
-		);
+		const { context, requestMock } = createContext({
+			results: [
+				{ id: 'tag-b', title: 'Beta' },
+				{ id: 'tag-a', title: 'Alpha' },
+			],
+		});
 
-		const result = await loadTags.call(context);
+		const result = await searchTags.call(context, 'a');
 
 		expect(requestMock).toHaveBeenCalledTimes(1);
 		expect(requestMock).toHaveBeenCalledWith(
@@ -88,9 +73,11 @@ describe('loadTags helper (v2)', () => {
 				},
 			}),
 		);
-		expect(result).toEqual([
-			{ name: 'Alpha', value: 'tag-a' },
-			{ name: 'Beta', value: 'tag-b' },
-		]);
+		expect(result).toEqual({
+			results: [
+				{ name: 'Alpha', value: 'tag-a' },
+				{ name: 'Beta', value: 'tag-b' },
+			],
+		});
 	});
 });

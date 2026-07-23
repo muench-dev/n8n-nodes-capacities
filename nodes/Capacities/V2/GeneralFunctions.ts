@@ -1,4 +1,4 @@
-import type { ILoadOptionsFunctions, INodePropertyOptions } from 'n8n-workflow';
+import type { ILoadOptionsFunctions, INodeListSearchResult, INodePropertyOptions } from 'n8n-workflow';
 
 export async function loadStructures(
 	this: ILoadOptionsFunctions,
@@ -17,13 +17,14 @@ export async function loadStructures(
 		.sort((a, b) => a.name.localeCompare(b.name));
 }
 
-export async function loadTags(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
-	const currentSearch = this.getCurrentNodeParameter('weblinkOptions.tagSearch');
-	const fallbackSearch = this.getNodeParameter('weblinkOptions.tagSearch', '') as string;
-	const query = String(currentSearch ?? fallbackSearch).trim();
+export async function searchTags(
+	this: ILoadOptionsFunctions,
+	filter?: string,
+): Promise<INodeListSearchResult> {
+	const query = String(filter ?? '').trim();
 
 	if (!query) {
-		return [];
+		return { results: [] };
 	}
 
 	const response = (await this.helpers.requestWithAuthentication.call(this, 'capacitiesApi', {
@@ -40,7 +41,9 @@ export async function loadTags(this: ILoadOptionsFunctions): Promise<INodeProper
 		results: Array<{ id: string; title: string }>;
 	};
 
-	return response.results
-		.map((tag) => ({ name: tag.title, value: tag.id }))
-		.sort((a, b) => a.name.localeCompare(b.name));
+	return {
+		results: response.results
+			.map((tag) => ({ name: tag.title, value: tag.id }))
+			.sort((a, b) => a.name.localeCompare(b.name)),
+	};
 }

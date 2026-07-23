@@ -1,6 +1,6 @@
 import type { ILoadOptionsFunctions } from 'n8n-workflow';
 
-import { loadStructures, searchTags } from '../GeneralFunctions';
+import { loadStructures, loadTags } from '../GeneralFunctions';
 
 const createContext = (response: Record<string, unknown>) => {
 	const requestMock = jest.fn().mockResolvedValue(response);
@@ -40,27 +40,19 @@ describe('loadStructures helper (v1)', () => {
 	});
 });
 
-describe('searchTags helper (v2)', () => {
-	it('returns no options without hitting the API when no filter is set', async () => {
-		const { context, requestMock } = createContext({ results: [] });
-
-		const result = await searchTags.call(context);
-
-		expect(result).toEqual({ results: [] });
-		expect(requestMock).not.toHaveBeenCalled();
-	});
-
-	it('requests RootTag search results and maps id/title pairs', async () => {
+describe('loadTags helper (v2)', () => {
+	it('loads tag options from valid RootTag searches and deduplicates results', async () => {
 		const { context, requestMock } = createContext({
 			results: [
 				{ id: 'tag-b', title: 'Beta' },
 				{ id: 'tag-a', title: 'Alpha' },
+				{ id: 'tag-a', title: 'Alpha' },
 			],
 		});
 
-		const result = await searchTags.call(context, 'a');
+		const result = await loadTags.call(context);
 
-		expect(requestMock).toHaveBeenCalledTimes(1);
+		expect(requestMock).toHaveBeenCalledTimes(26);
 		expect(requestMock).toHaveBeenCalledWith(
 			'capacitiesApi',
 			expect.objectContaining({
@@ -73,11 +65,9 @@ describe('searchTags helper (v2)', () => {
 				},
 			}),
 		);
-		expect(result).toEqual({
-			results: [
-				{ name: 'Alpha', value: 'tag-a' },
-				{ name: 'Beta', value: 'tag-b' },
-			],
-		});
+		expect(result).toEqual([
+			{ name: 'Alpha', value: 'tag-a' },
+			{ name: 'Beta', value: 'tag-b' },
+		]);
 	});
 });

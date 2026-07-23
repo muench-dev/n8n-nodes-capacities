@@ -30,30 +30,21 @@ describe('Weblink description (v2)', () => {
 			expect.arrayContaining([
 				'descriptionOverwrite',
 				'markdown',
-				'tags',
+				'tagIds',
 				'titleOverwrite',
 			]),
 		);
 
 		const tagOption = (optionsProperty?.options ?? []).find(
-			(option) => (option as { name: string }).name === 'tags',
-		) as { options?: Array<{ values?: unknown[] }>; type?: string; typeOptions?: unknown } | undefined;
+			(option) => (option as { name: string }).name === 'tagIds',
+		) as { type?: string; typeOptions?: { loadOptionsMethod?: string } } | undefined;
 
 		expect(tagOption).toMatchObject({
-			type: 'fixedCollection',
+			type: 'multiOptions',
 			typeOptions: {
-				multipleValues: true,
+				loadOptionsMethod: 'loadTags',
 			},
 		});
-
-		expect(tagOption?.options?.[0].values).toEqual(
-			expect.arrayContaining([
-				expect.objectContaining({
-					name: 'tagId',
-					type: 'resourceLocator',
-				}),
-			]),
-		);
 	});
 
 	it('maps Tag IDs to the v1 entity property shape', () => {
@@ -62,8 +53,7 @@ describe('Weblink description (v2)', () => {
 		const body = saveOption?.routing?.request?.body as { properties?: string } | undefined;
 		const propertiesExpression = body?.properties;
 
-		expect(propertiesExpression).toContain('o.tags?.values');
-		expect(propertiesExpression).toContain('tag.tagId.value');
+		expect(propertiesExpression).toContain('o.tagIds');
 		expect(propertiesExpression).toContain('p.tags = { type: "entity"');
 		expect(propertiesExpression).toContain('entity: tagIds.map((id) => ({ id }))');
 	});

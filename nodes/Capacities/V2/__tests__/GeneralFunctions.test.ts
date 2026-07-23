@@ -2,8 +2,22 @@ import type { ILoadOptionsFunctions } from 'n8n-workflow';
 
 import { loadStructures, loadTags } from '../GeneralFunctions';
 
+const rateLimitMessage =
+	'Capacities is receiving too many requests from this API token. Please wait a moment and try loading the options again.';
+
 const createContext = (response: Record<string, unknown>) => {
 	const requestMock = jest.fn().mockResolvedValue(response);
+	const context = {
+		helpers: {
+			requestWithAuthentication: requestMock,
+		},
+	} as unknown as ILoadOptionsFunctions;
+
+	return { context, requestMock };
+};
+
+const createRejectingContext = (error: unknown) => {
+	const requestMock = jest.fn().mockRejectedValue(error);
 	const context = {
 		helpers: {
 			requestWithAuthentication: requestMock,
@@ -38,6 +52,15 @@ describe('loadStructures helper (v1)', () => {
 			{ name: 'Beta', value: 'structure-b' },
 		]);
 	});
+
+	it('shows a human-readable rate-limit error', async () => {
+		const { context } = createRejectingContext({
+			response: { statusCode: 429 },
+			message: 'The service is receiving too many requests from you',
+		});
+
+		await expect(loadStructures.call(context)).rejects.toThrow(rateLimitMessage);
+	});
 });
 
 describe('loadTags helper (v2)', () => {
@@ -69,5 +92,13 @@ describe('loadTags helper (v2)', () => {
 			{ name: 'Alpha', value: 'tag-a' },
 			{ name: 'Beta', value: 'tag-b' },
 		]);
+	});
+
+	it('shows a human-readable rate-limit error', async () => {
+		const { context } = createRejectingContext(
+			new Error('NodeApiError The service is receiving too many requests from you'),
+		);
+
+		await expect(loadTags.call(context)).rejects.toThrow(rateLimitMessage);
 	});
 });

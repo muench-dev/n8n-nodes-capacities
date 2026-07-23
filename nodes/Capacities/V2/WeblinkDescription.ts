@@ -20,9 +20,13 @@ export const weblink: INodeProperties[] = [
 						json: true,
 						body: {
 							url: '={{$parameter.url}}',
-							markdown: '={{$parameter.weblinkOptions.markdown || undefined}}',
-							properties:
-								'={{(() => { const o = $parameter.weblinkOptions; const p = {}; if (o.titleOverwrite) { p.title = { type: "title", title: { value: o.titleOverwrite } }; } if (o.descriptionOverwrite) { p.description = { type: "text", text: { value: o.descriptionOverwrite } }; } const tagIds = Array.isArray(o.tagIds) ? o.tagIds.filter(Boolean) : (o.tagIds ? [o.tagIds] : []); if (tagIds.length) { p.tags = { type: "entity", entity: tagIds.map((id) => ({ id })) }; } return Object.keys(p).length ? p : undefined; })()}}',
+							markdown: '={{$parameter["weblinkOptions"]["markdown"] || undefined}}',
+							properties: {
+								title:
+									'={{$parameter["weblinkOptions"]["titleOverwrite"] ? { type: "title", title: { value: $parameter["weblinkOptions"]["titleOverwrite"] } } : undefined}}',
+								description:
+									'={{$parameter["weblinkOptions"]["descriptionOverwrite"] ? { type: "text", text: { value: $parameter["weblinkOptions"]["descriptionOverwrite"] } } : undefined}}',
+							},
 						},
 					},
 				},
@@ -71,17 +75,6 @@ export const weblink: INodeProperties[] = [
 				default: '',
 				description: 'The markdown text of the weblink',
 				hint: 'Text formatted as markdown that will be added to the notes section',
-			},
-			{
-				displayName: 'Tag Names or IDs',
-				name: 'tagIds',
-				type: 'multiOptions',
-				typeOptions: {
-					loadOptionsMethod: 'loadTags',
-				},
-				default: [],
-				description:
-					'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
 			},
 			{
 				displayName: 'Title Overwrite',

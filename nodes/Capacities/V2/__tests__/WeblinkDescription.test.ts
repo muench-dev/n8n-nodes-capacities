@@ -14,47 +14,46 @@ describe('Weblink description (v2)', () => {
 		expect(saveOption?.routing?.request?.body).toMatchObject({
 			url: '={{$parameter.url}}',
 		});
+		expect(saveOption?.routing?.request?.body).toHaveProperty('properties');
 	});
 
 	it('does not expose a Space ID selector (token is space-scoped)', () => {
 		expect(getProperty(weblink, 'spaceId', 'weblink')).toBeUndefined();
 	});
 
-	it('exposes Markdown, Title Overwrite, Description Overwrite, and selectable Tags', () => {
+	it('exposes Markdown, Title Overwrite, and Description Overwrite', () => {
 		const optionsProperty = getProperty(weblink, 'weblinkOptions', 'weblink');
 		expect(optionsProperty?.type).toBe('collection');
 		const names = (optionsProperty?.options ?? []).map(
 			(option) => (option as { name: string }).name,
 		);
 		expect(names).toEqual(
-			expect.arrayContaining([
-				'descriptionOverwrite',
-				'markdown',
-				'tagIds',
-				'titleOverwrite',
-			]),
+			expect.arrayContaining(['descriptionOverwrite', 'markdown', 'titleOverwrite']),
 		);
-
-		const tagOption = (optionsProperty?.options ?? []).find(
-			(option) => (option as { name: string }).name === 'tagIds',
-		) as { type?: string; typeOptions?: { loadOptionsMethod?: string } } | undefined;
-
-		expect(tagOption).toMatchObject({
-			type: 'multiOptions',
-			typeOptions: {
-				loadOptionsMethod: 'loadTags',
-			},
-		});
+		expect(names).not.toContain('tagIds');
 	});
 
-	it('maps Tag IDs to the v1 entity property shape', () => {
+	it('uses direct option parameter paths so n8n resolves expressions before sending them', () => {
 		const operationProperty = getProperty(weblink, 'operation', 'weblink');
 		const saveOption = getOptions(operationProperty).find((option) => option.value === 'save');
-		const body = saveOption?.routing?.request?.body as { properties?: string } | undefined;
-		const propertiesExpression = body?.properties;
+		const body = saveOption?.routing?.request?.body as
+			| { markdown?: string; properties?: Record<string, string> }
+			| undefined;
 
-		expect(propertiesExpression).toContain('o.tagIds');
-		expect(propertiesExpression).toContain('p.tags = { type: "entity"');
-		expect(propertiesExpression).toContain('entity: tagIds.map((id) => ({ id }))');
+		expect(body?.markdown).toContain('$parameter["weblinkOptions"]["markdown"]');
+		expect(body?.properties?.title).toContain('$parameter["weblinkOptions"]["titleOverwrite"]');
+		expect(body?.properties?.description).toContain(
+			'$parameter["weblinkOptions"]["descriptionOverwrite"]',
+		);
+	});
+
+	it('does not include unsupported tags in the weblink create payload', () => {
+		const operationProperty = getProperty(weblink, 'operation', 'weblink');
+		const saveOption = getOptions(operationProperty).find((option) => option.value === 'save');
+		const body = saveOption?.routing?.request?.body as
+			| { properties?: { tags?: string } }
+			| undefined;
+
+		expect(body?.properties?.tags).toBeUndefined();
 	});
 });

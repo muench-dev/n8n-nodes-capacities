@@ -555,6 +555,11 @@ export class CapacitiesV2 implements INodeType {
 							itemIndex,
 						) as any,
 					);
+				} else if (resource === 'object' && operation === 'createFromMarkdown') {
+					const structureId = this.getNodeParameter('structureId', itemIndex) as string;
+					const markdown = this.getNodeParameter('markdown', itemIndex) as string;
+
+					response = await client.object.markdown.create({ structureId, markdown });
 				} else if (resource === 'object' && operation === 'update') {
 					const id = this.getNodeParameter('id', itemIndex) as string;
 					const updateFields = this.getNodeParameter('updateFields', itemIndex, {}) as {
@@ -621,6 +626,16 @@ export class CapacitiesV2 implements INodeType {
 					}
 
 					response = await client.object.update(body);
+				} else if (resource === 'object' && operation === 'updateFromMarkdownFrontmatter') {
+					const id = this.getNodeParameter('id', itemIndex) as string;
+					const markdown = this.getNodeParameter('markdown', itemIndex) as string;
+
+					response = await client.object.markdown.update({ id, markdown });
+				} else if (resource === 'object' && operation === 'appendFromMarkdown') {
+					const id = this.getNodeParameter('id', itemIndex) as string;
+					const markdown = this.getNodeParameter('markdown', itemIndex) as string;
+
+					response = await client.blocks.append({ id, markdown });
 				} else if (resource === 'object' && operation === 'delete') {
 					const id = this.getNodeParameter('id', itemIndex) as string;
 					const hardDelete = this.getNodeParameter('hardDelete', itemIndex, false) as boolean;

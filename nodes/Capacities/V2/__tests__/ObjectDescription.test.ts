@@ -30,6 +30,95 @@ describe('Object description (v2)', () => {
 		});
 	});
 
+	it('defines createFromMarkdown object operation', () => {
+		const operationProperty = getProperty(object, 'operation', 'object');
+		expect(operationProperty).toBeDefined();
+		const option = getOptions(operationProperty).find(
+			(option) => option.value === 'createFromMarkdown',
+		);
+		expect(option).toMatchObject({
+			name: 'Create From Markdown',
+			value: 'createFromMarkdown',
+			description: 'Create an object from Markdown content',
+			action: 'Create an object from markdown',
+		});
+	});
+
+	it('exposes a body-content markdown field for the createFromMarkdown and appendFromMarkdown operations', () => {
+		const markdownProperties = object.filter((property) => property.name === 'markdown');
+		const bodyMarkdownProperty = markdownProperties.find(
+			(property) =>
+				property.displayOptions?.show?.operation &&
+				Array.isArray(property.displayOptions.show.operation) &&
+				property.displayOptions.show.operation.includes('createFromMarkdown'),
+		);
+
+		expect(bodyMarkdownProperty).toMatchObject({
+			type: 'string',
+			required: true,
+			default: '',
+			displayOptions: {
+				show: {
+					resource: ['object'],
+					operation: ['createFromMarkdown', 'appendFromMarkdown'],
+				},
+			},
+		});
+	});
+
+	it('exposes a frontmatter markdown field for the updateFromMarkdownFrontmatter operation', () => {
+		const markdownProperties = object.filter((property) => property.name === 'markdown');
+		const frontmatterMarkdownProperty = markdownProperties.find(
+			(property) =>
+				property.displayOptions?.show?.operation &&
+				Array.isArray(property.displayOptions.show.operation) &&
+				property.displayOptions.show.operation.includes('updateFromMarkdownFrontmatter'),
+		);
+
+		expect(frontmatterMarkdownProperty).toMatchObject({
+			displayName: 'Markdown Frontmatter',
+			type: 'string',
+			required: true,
+			default: '',
+			displayOptions: {
+				show: {
+					resource: ['object'],
+					operation: ['updateFromMarkdownFrontmatter'],
+				},
+			},
+		});
+		expect(frontmatterMarkdownProperty?.description).toContain('YAML frontmatter');
+	});
+
+	it('defines appendFromMarkdown object operation', () => {
+		const operationProperty = getProperty(object, 'operation', 'object');
+		expect(operationProperty).toBeDefined();
+		const option = getOptions(operationProperty).find(
+			(option) => option.value === 'appendFromMarkdown',
+		);
+		expect(option).toMatchObject({
+			name: 'Append From Markdown',
+			value: 'appendFromMarkdown',
+			description: "Append Markdown content to an existing object's body",
+			action: 'Append markdown to an object',
+		});
+	});
+
+	it('defines updateFromMarkdownFrontmatter object operation', () => {
+		const operationProperty = getProperty(object, 'operation', 'object');
+		expect(operationProperty).toBeDefined();
+		const option = getOptions(operationProperty).find(
+			(option) => option.value === 'updateFromMarkdownFrontmatter',
+		);
+		expect(option).toMatchObject({
+			name: 'Update From Markdown Frontmatter',
+			value: 'updateFromMarkdownFrontmatter',
+			description:
+				"Update object properties from a YAML frontmatter block in a Markdown string (the object's body content is not touched)",
+			action: 'Update an object from markdown frontmatter',
+		});
+	});
+
 	it('exposes a required title field', () => {
 		const titleProperty = getProperty(object, 'title', 'object');
 
@@ -92,7 +181,13 @@ describe('Object description (v2)', () => {
 			displayOptions: {
 				show: {
 					resource: ['object'],
-					operation: ['get', 'update', 'delete'],
+					operation: [
+					'get',
+					'update',
+					'delete',
+					'updateFromMarkdownFrontmatter',
+					'appendFromMarkdown',
+				],
 				},
 			},
 		});

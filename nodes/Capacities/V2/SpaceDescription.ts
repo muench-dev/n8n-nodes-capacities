@@ -25,8 +25,7 @@ export const space: INodeProperties[] = [
 				name: 'Get Info',
 				value: 'getInfo',
 				action: 'Get structures and collections of the space',
-				description:
-					'Returns object types, property definitions, and collections for the space',
+				description: 'Returns object types, property definitions, and collections for the space',
 				routing: {
 					request: {
 						url: '/space/structures',

@@ -45,6 +45,10 @@
       "dist/nodes/Capacities/Capacities.node.js"
     ]
   },
+  "dependencies": {
+    "@capacities/api": "^1.1.2",
+    "zod": "^4.4.3"
+  },
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/node": "~26.1.0",

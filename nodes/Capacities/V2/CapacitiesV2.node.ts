@@ -1,11 +1,13 @@
 import type {
 	IDataObject,
 	IExecuteFunctions,
+	INode,
 	INodeExecutionData,
 	INodeType,
 	INodeTypeDescription,
 } from 'n8n-workflow';
 import { NodeOperationError } from 'n8n-workflow';
+import { CapacitiesClient } from '@capacities/api';
 import { resources } from './ResourceDescription';
 import { general } from './GeneralDescription';
 import { space } from './SpaceDescription';
@@ -13,6 +15,7 @@ import { search } from './SearchDescription';
 import { weblink } from './WeblinkDescription';
 import { dailyNote } from './DailyNoteDescription';
 import { tag } from './TagDescription';
+import { object } from './ObjectDescription';
 import { loadStructures, loadTags } from './GeneralFunctions';
 
 type WeblinkOptions = {
@@ -22,12 +25,17 @@ type WeblinkOptions = {
 	tagIds?: string | string[];
 };
 
-type RequestOptions = {
-	method: 'GET' | 'POST';
-	baseURL: string;
-	url: string;
-	json: true;
-	body?: IDataObject;
+type ObjectAdditionalFields = {
+	propertiesJson?: string;
+	collectionIds?: string;
+	blocksJson?: string;
+	propertiesToSend?: {
+		property?: Array<{
+			id: string;
+			type: string;
+			value: unknown;
+		}>;
+	};
 };
 
 const WEBLINK_TAGS_UNSUPPORTED_MESSAGE =
@@ -79,6 +87,153 @@ function getWeblinkBody(url: string, options: WeblinkOptions): IDataObject {
 	return body;
 }
 
+function parseJsonField(
+	value: string | undefined,
+	fieldLabel: string,
+	node: INode,
+	itemIndex: number,
+): IDataObject | undefined {
+	if (!value || !value.trim() || value.trim() === '{}') {
+		return undefined;
+	}
+
+	try {
+		return JSON.parse(value) as IDataObject;
+	} catch (error) {
+		throw new NodeOperationError(
+			node,
+			`Invalid JSON in ${fieldLabel}: ${(error as Error).message}`,
+			{
+				itemIndex,
+			},
+		);
+	}
+}
+
+function parseEntityArray(val: unknown): Array<{ id: string }> {
+	if (!val) {
+		return [];
+	}
+
+	if (Array.isArray(val)) {
+		return val
+			.map((item) => {
+				if (typeof item === 'string') {
+					return { id: item.trim() };
+				}
+				if (item && typeof item === 'object') {
+					const id = (item as { id?: unknown })?.id;
+					if (typeof id === 'string') {
+						return { id: id.trim() };
+					}
+				}
+				return null;
+			})
+			.filter((x): x is { id: string } => x !== null && !!x.id);
+	}
+
+	if (typeof val === 'string') {
+		const trimmed = val.trim();
+		if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+			try {
+				const parsed = JSON.parse(trimmed);
+				if (Array.isArray(parsed)) {
+					return parseEntityArray(parsed);
+				}
+			} catch (_) {}
+		}
+
+		return trimmed
+			.split(',')
+			.map((id) => id.trim())
+			.filter(Boolean)
+			.map((id) => ({ id }));
+	}
+
+	return [];
+}
+
+function mapUiPropertyToApi(prop: { id: string; type: string; value: unknown }): IDataObject {
+	const type = prop.type;
+	const val = prop.value;
+
+	if (type === 'text') {
+		return { type: 'text', text: { value: String(val ?? '') } };
+	} else if (type === 'title') {
+		return { type: 'title', title: { value: String(val ?? '') } };
+	} else if (type === 'number') {
+		const num = Number(val);
+		return { type: 'number', number: { value: isNaN(num) ? null : num } };
+	} else if (type === 'boolean') {
+		if (typeof val === 'boolean') {
+			return { type: 'boolean', boolean: { value: val } };
+		}
+		return { type: 'boolean', boolean: { value: String(val).toLowerCase() === 'true' } };
+	} else if (type === 'url') {
+		return { type: 'url', url: { value: String(val ?? '') } };
+	} else if (type === 'date') {
+		return { type: 'date', date: { start: String(val ?? '') } };
+	} else if (type === 'label') {
+		return {
+			type: 'label',
+			label: parseEntityArray(val),
+		};
+	} else if (type === 'entity') {
+		return {
+			type: 'entity',
+			entity: parseEntityArray(val),
+		};
+	}
+	return {};
+}
+
+function getCreateObjectBody(
+	structureId: string,
+	title: string,
+	additionalFields: ObjectAdditionalFields,
+	node: INode,
+	itemIndex: number,
+): IDataObject {
+	const properties: IDataObject = {
+		title: { type: 'title', title: { value: title } },
+	};
+
+	if (additionalFields.propertiesToSend?.property) {
+		for (const prop of additionalFields.propertiesToSend.property) {
+			if (prop.id) {
+				properties[prop.id] = mapUiPropertyToApi(prop);
+			}
+		}
+	}
+
+	const extraProperties = parseJsonField(
+		additionalFields.propertiesJson,
+		'Properties',
+		node,
+		itemIndex,
+	);
+	if (extraProperties) {
+		Object.assign(properties, extraProperties);
+	}
+
+	const body: IDataObject = { structureId, properties };
+
+	const collectionIds = (additionalFields.collectionIds ?? '')
+		.split(',')
+		.map((id) => id.trim())
+		.filter(Boolean);
+	if (collectionIds.length) {
+		body.collections = collectionIds;
+	}
+
+	const blocks = parseJsonField(additionalFields.blocksJson, 'Blocks', node, itemIndex);
+	if (blocks) {
+		body.blocks = blocks;
+	}
+
+	return body;
+}
+
 export class CapacitiesV2 implements INodeType {
 	methods = {
 		loadOptions: {
@@ -116,98 +271,84 @@ export class CapacitiesV2 implements INodeType {
 				'Content-Type': 'application/json',
 			},
 		},
-		properties: [...resources, ...space, ...search, ...weblink, ...dailyNote, ...tag, ...general],
+		properties: [
+			...resources,
+			...space,
+			...search,
+			...weblink,
+			...dailyNote,
+			...tag,
+			...object,
+			...general,
+		],
 	};
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const items = this.getInputData();
 		const returnData: INodeExecutionData[] = [];
 
+		const credentials = await this.getCredentials('capacitiesApi');
+		const token = credentials.token as string;
+		const client = new CapacitiesClient({ apiToken: token });
+
 		for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
 			const resource = this.getNodeParameter('resource', itemIndex) as string;
 			const operation = this.getNodeParameter('operation', itemIndex) as string;
-			let requestOptions: RequestOptions;
+			let response: any;
 			let rootProperty: string | undefined;
 
-			if (resource === 'space' && operation === 'get') {
-				requestOptions = {
-					method: 'GET',
-					baseURL: 'https://api.capacities.io',
-					url: '/space',
-					json: true,
-				};
-			} else if (resource === 'space' && operation === 'getInfo') {
-				requestOptions = {
-					method: 'GET',
-					baseURL: 'https://api.capacities.io',
-					url: '/space/structures',
-					json: true,
-				};
-				rootProperty = 'structures';
-			} else if (resource === 'search' && operation === 'search') {
-				const structureIds = this.getNodeParameter('structureIds', itemIndex, []) as string[];
-				const limit = this.getNodeParameter('limit', itemIndex, 50) as number;
-				const body: IDataObject = {
-					query: this.getNodeParameter('searchTerm', itemIndex) as string,
-					limit,
-				};
+			try {
+				if (resource === 'space' && operation === 'get') {
+					response = await client.space.get();
+				} else if (resource === 'space' && operation === 'getInfo') {
+					response = await client.space.structures();
+					rootProperty = 'structures';
+				} else if (resource === 'search' && operation === 'search') {
+					const structureIds = this.getNodeParameter('structureIds', itemIndex, []) as string[];
+					const limit = this.getNodeParameter('limit', itemIndex, 50) as number;
+					const body: any = {
+						query: this.getNodeParameter('searchTerm', itemIndex) as string,
+						limit,
+					};
 
-				if (structureIds.length) {
-					body.structureIds = structureIds;
-				}
+					if (structureIds.length) {
+						body.structureIds = structureIds;
+					}
 
-				requestOptions = {
-					method: 'POST',
-					baseURL: 'https://api.capacities.io',
-					url: '/objects/search',
-					json: true,
-					body,
-				};
-				rootProperty = 'results';
-			} else if (resource === 'weblink' && operation === 'save') {
-				const weblinkOptions = this.getNodeParameter(
-					'weblinkOptions',
-					itemIndex,
-					{},
-				) as WeblinkOptions;
-				if (getSelectedIds(weblinkOptions.tagIds).length) {
-					throw new NodeOperationError(this.getNode(), WEBLINK_TAGS_UNSUPPORTED_MESSAGE, {
+					response = await client.objects.search(body);
+					rootProperty = 'results';
+				} else if (resource === 'weblink' && operation === 'save') {
+					const weblinkOptions = this.getNodeParameter(
+						'weblinkOptions',
 						itemIndex,
-					});
-				}
+						{},
+					) as WeblinkOptions;
+					if (getSelectedIds(weblinkOptions.tagIds).length) {
+						throw new NodeOperationError(this.getNode(), WEBLINK_TAGS_UNSUPPORTED_MESSAGE, {
+							itemIndex,
+						});
+					}
 
-				requestOptions = {
-					method: 'POST',
-					baseURL: 'https://api.capacities.io',
-					url: '/object/url',
-					json: true,
-					body: getWeblinkBody(this.getNodeParameter('url', itemIndex) as string, weblinkOptions),
-				};
-			} else if (resource === 'dailyNote' && operation === 'saveToDailyNote') {
-				const body: IDataObject = {
-					markdown: this.getNodeParameter('mdText', itemIndex) as string,
-					noTimeStamp: !(this.getNodeParameter('timestamp', itemIndex, true) as boolean),
-				};
+					response = await client.object.createFromUrl(
+						getWeblinkBody(
+							this.getNodeParameter('url', itemIndex) as string,
+							weblinkOptions,
+						) as any,
+					);
+				} else if (resource === 'dailyNote' && operation === 'saveToDailyNote') {
+					const body: any = {
+						markdown: this.getNodeParameter('mdText', itemIndex) as string,
+						noTimeStamp: !(this.getNodeParameter('timestamp', itemIndex, true) as boolean),
+					};
 
-				const date = this.getNodeParameter('date', itemIndex, '') as string;
-				if (date) {
-					body.date = date;
-				}
+					const date = this.getNodeParameter('date', itemIndex, '') as string;
+					if (date) {
+						body.date = date;
+					}
 
-				requestOptions = {
-					method: 'POST',
-					baseURL: 'https://api.capacities.io',
-					url: '/blocks/daily-note/append',
-					json: true,
-					body,
-				};
-			} else if (resource === 'tag' && operation === 'save') {
-				requestOptions = {
-					method: 'POST',
-					baseURL: 'https://api.capacities.io',
-					url: '/object',
-					json: true,
-					body: {
+					response = await client.blocks.dailyNote.append(body);
+				} else if (resource === 'tag' && operation === 'save') {
+					response = await client.object.create({
 						structureId: 'RootTag',
 						properties: {
 							title: {
@@ -217,24 +358,109 @@ export class CapacitiesV2 implements INodeType {
 								},
 							},
 						},
-					},
-				};
-			} else {
-				throw new NodeOperationError(
-					this.getNode(),
-					`Unsupported Capacities operation: ${resource}.${operation}`,
-				);
+					});
+				} else if (resource === 'object' && operation === 'create') {
+					const structureId = this.getNodeParameter('structureId', itemIndex) as string;
+					const title = this.getNodeParameter('title', itemIndex) as string;
+					const additionalFields = this.getNodeParameter(
+						'additionalFields',
+						itemIndex,
+						{},
+					) as ObjectAdditionalFields;
+
+					response = await client.object.create(
+						getCreateObjectBody(
+							structureId,
+							title,
+							additionalFields,
+							this.getNode(),
+							itemIndex,
+						) as any,
+					);
+				} else if (resource === 'object' && operation === 'update') {
+					const id = this.getNodeParameter('id', itemIndex) as string;
+					const updateFields = this.getNodeParameter('updateFields', itemIndex, {}) as {
+						title?: string;
+						propertiesJson?: string;
+						collectionIds?: string;
+						blocksJson?: string;
+						propertiesToSend?: {
+							property?: Array<{
+								id: string;
+								type: string;
+								value: string;
+							}>;
+						};
+					};
+
+					const properties: IDataObject = {};
+					if (updateFields.title) {
+						properties.title = {
+							type: 'title',
+							title: { value: updateFields.title },
+						};
+					}
+
+					if (updateFields.propertiesToSend?.property) {
+						for (const prop of updateFields.propertiesToSend.property) {
+							if (prop.id) {
+								properties[prop.id] = mapUiPropertyToApi(prop);
+							}
+						}
+					}
+
+					const extraProperties = parseJsonField(
+						updateFields.propertiesJson,
+						'Properties',
+						this.getNode(),
+						itemIndex,
+					);
+					if (extraProperties) {
+						Object.assign(properties, extraProperties);
+					}
+
+					const body: any = { id };
+					if (Object.keys(properties).length) {
+						body.properties = properties;
+					}
+
+					const collectionIds = (updateFields.collectionIds ?? '')
+						.split(',')
+						.map((cid) => cid.trim())
+						.filter(Boolean);
+					if (collectionIds.length) {
+						body.collections = collectionIds;
+					}
+
+					const blocks = parseJsonField(
+						updateFields.blocksJson,
+						'Blocks',
+						this.getNode(),
+						itemIndex,
+					);
+					if (blocks) {
+						body.blocks = blocks;
+					}
+
+					response = await client.object.update(body);
+				} else if (resource === 'object' && operation === 'delete') {
+					const id = this.getNodeParameter('id', itemIndex) as string;
+					const hardDelete = this.getNodeParameter('hardDelete', itemIndex, false) as boolean;
+
+					response = await client.object.delete({ id, hardDelete });
+				} else {
+					throw new NodeOperationError(
+						this.getNode(),
+						`Unsupported Capacities operation: ${resource}.${operation}`,
+					);
+				}
+
+				returnData.push(...toJsonItems(response, rootProperty));
+			} catch (error) {
+				throw new NodeOperationError(this.getNode(), error as Error, {
+					itemIndex,
+				});
 			}
-
-			const response = await this.helpers.requestWithAuthentication.call(
-				this,
-				'capacitiesApi',
-				requestOptions,
-				undefined,
-				itemIndex,
-			);
-
-			returnData.push(...toJsonItems(response, rootProperty));
 		}
 
 		return [returnData];

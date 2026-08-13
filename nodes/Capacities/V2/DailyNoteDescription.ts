@@ -12,7 +12,7 @@ export const dailyNote: INodeProperties[] = [
 			{
 				name: 'Save',
 				value: 'saveToDailyNote',
-				description: "Append markdown to a daily note",
+				description: 'Append markdown to a daily note',
 				routing: {
 					request: {
 						url: '/blocks/daily-note/append',

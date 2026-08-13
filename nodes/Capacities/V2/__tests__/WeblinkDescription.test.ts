@@ -37,8 +37,7 @@ describe('Weblink description (v2)', () => {
 		const operationProperty = getProperty(weblink, 'operation', 'weblink');
 		const saveOption = getOptions(operationProperty).find((option) => option.value === 'save');
 		const body = saveOption?.routing?.request?.body as
-			| { markdown?: string; properties?: Record<string, string> }
-			| undefined;
+			{ markdown?: string; properties?: Record<string, string> } | undefined;
 
 		expect(body?.markdown).toContain('$parameter["weblinkOptions"]["markdown"]');
 		expect(body?.properties?.title).toContain('$parameter["weblinkOptions"]["titleOverwrite"]');
@@ -51,8 +50,7 @@ describe('Weblink description (v2)', () => {
 		const operationProperty = getProperty(weblink, 'operation', 'weblink');
 		const saveOption = getOptions(operationProperty).find((option) => option.value === 'save');
 		const body = saveOption?.routing?.request?.body as
-			| { properties?: { tags?: string } }
-			| undefined;
+			{ properties?: { tags?: string } } | undefined;
 
 		expect(body?.properties?.tags).toBeUndefined();
 	});

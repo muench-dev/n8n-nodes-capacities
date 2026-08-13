@@ -71,12 +71,30 @@ describe('Object description (v2)', () => {
 		]);
 	});
 
-	it('exposes fields for update/delete object operations', () => {
+	it('defines get object operation', () => {
+		const operationProperty = getProperty(object, 'operation', 'object');
+		expect(operationProperty).toBeDefined();
+		const getOption = getOptions(operationProperty).find((option) => option.value === 'get');
+		expect(getOption).toMatchObject({
+			name: 'Get',
+			value: 'get',
+			description: 'Get an object from your space',
+			action: 'Get an object',
+		});
+	});
+
+	it('exposes fields for get/update/delete object operations', () => {
 		const idProperty = getProperty(object, 'id', 'object');
 		expect(idProperty).toMatchObject({
 			type: 'string',
 			required: true,
 			default: '',
+			displayOptions: {
+				show: {
+					resource: ['object'],
+					operation: ['get', 'update', 'delete'],
+				},
+			},
 		});
 
 		const hardDeleteProperty = getProperty(object, 'hardDelete', 'object');

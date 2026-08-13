@@ -313,7 +313,7 @@ describe('CapacitiesV2 node', () => {
 			id: 'object-id-123',
 			hardDelete: true,
 		});
-		expect(result).toEqual([[{ json: {} }]]);
+		expect(result).toEqual([[{ json: { success: true } }]]);
 	});
 
 	it('creates and updates objects with mapped propertiesToSend', async () => {

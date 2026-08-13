@@ -361,7 +361,10 @@ describe('CapacitiesV2 node', () => {
 				age: { type: 'number', number: { value: 42 } },
 				is_active: { type: 'boolean', boolean: { value: true } },
 				website: { type: 'url', url: { value: 'https://example.com' } },
-				birthday: { type: 'date', date: { start: '2026-08-13' } },
+				birthday: {
+					type: 'date',
+					date: { dateResolution: 'day', start: '2026-08-13T00:00:00.000Z', end: null },
+				},
 				tags: { type: 'label', label: [{ id: 'tag-1' }, { id: 'tag-2' }] },
 				links: { type: 'entity', entity: [{ id: 'ent-1' }, { id: 'ent-2' }] },
 			},
@@ -406,6 +409,95 @@ describe('CapacitiesV2 node', () => {
 				tags1: { type: 'label', label: [{ id: 'tag-1' }, { id: 'tag-2' }] },
 				tags2: { type: 'label', label: [{ id: 'tag-3' }, { id: 'tag-4' }] },
 				tags3: { type: 'label', label: [{ id: 'tag-5' }, { id: 'tag-6' }] },
+			},
+		});
+	});
+
+	it('handles diverse date property formats correctly', async () => {
+		const node = new CapacitiesV2();
+		mockObjectCreate.mockResolvedValue({ id: 'created-object' });
+
+		const context = {
+			getInputData: jest.fn(() => [{ json: {} }]),
+			getNode: jest.fn(() => ({ name: 'Capacities', type: 'capacities' })),
+			getNodeParameter: jest.fn((parameterName: string) => {
+				const parameters: Record<string, unknown> = {
+					resource: 'object',
+					operation: 'create',
+					structureId: 'structure-1',
+					title: 'My Object',
+					additionalFields: {
+						propertiesToSend: {
+							property: [
+								{ id: 'date1', type: 'date', value: '2026-08-13' },
+								{ id: 'date2', type: 'date', value: '2026-08-13T12:00:00Z' },
+								{ id: 'date3', type: 'date', value: '2026-08-13 to 2026-08-15' },
+								{ id: 'date4', type: 'date', value: '2026-08-13T12:00:00Z - 2026-08-13T13:00:00Z' },
+								{ id: 'date5', type: 'date', value: 'null' },
+								{ id: 'date6', type: 'date', value: '' },
+								{
+									id: 'date7',
+									type: 'date',
+									value: {
+										type: 'date',
+										date: { dateResolution: 'day', start: '2026-08-13', end: null },
+									},
+								},
+								{
+									id: 'date8',
+									type: 'date',
+									value: '{"dateResolution":"time","start":"2026-08-13T12:00:00Z","end":null}',
+								},
+							],
+						},
+					},
+				};
+
+				return parameters[parameterName];
+			}),
+			getCredentials: jest.fn(() => Promise.resolve({ token: 'test-token' })),
+		} as unknown as IExecuteFunctions;
+
+		await node.execute.call(context);
+
+		expect(mockObjectCreate).toHaveBeenCalledWith({
+			structureId: 'structure-1',
+			properties: {
+				title: { type: 'title', title: { value: 'My Object' } },
+				date1: {
+					type: 'date',
+					date: { dateResolution: 'day', start: '2026-08-13T00:00:00.000Z', end: null },
+				},
+				date2: {
+					type: 'date',
+					date: { dateResolution: 'time', start: '2026-08-13T12:00:00.000Z', end: null },
+				},
+				date3: {
+					type: 'date',
+					date: {
+						dateResolution: 'day',
+						start: '2026-08-13T00:00:00.000Z',
+						end: '2026-08-15T00:00:00.000Z',
+					},
+				},
+				date4: {
+					type: 'date',
+					date: {
+						dateResolution: 'time',
+						start: '2026-08-13T12:00:00.000Z',
+						end: '2026-08-13T13:00:00.000Z',
+					},
+				},
+				date5: { type: 'date', date: { dateResolution: 'day', start: null, end: null } },
+				date6: { type: 'date', date: { dateResolution: 'day', start: null, end: null } },
+				date7: {
+					type: 'date',
+					date: { dateResolution: 'day', start: '2026-08-13T00:00:00.000Z', end: null },
+				},
+				date8: {
+					type: 'date',
+					date: { dateResolution: 'time', start: '2026-08-13T12:00:00.000Z', end: null },
+				},
 			},
 		});
 	});

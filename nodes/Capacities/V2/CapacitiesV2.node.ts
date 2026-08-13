@@ -153,6 +153,139 @@ function parseEntityArray(val: unknown): Array<{ id: string }> {
 	return [];
 }
 
+function parseDateString(str: string): { value: string | null; hasTime: boolean } {
+	const trimmed = str.trim();
+	if (!trimmed || trimmed.toLowerCase() === 'null') {
+		return { value: null, hasTime: false };
+	}
+
+	// Check if it's already a full ISO string (midnight UTC)
+	const midnightRegex = /^(\d{4}-\d{2}-\d{2})T00:00:00(\.000)?(Z|[+-]00:00)?$/i;
+	const midnightMatch = trimmed.match(midnightRegex);
+	if (midnightMatch) {
+		return { value: `${midnightMatch[1]}T00:00:00.000Z`, hasTime: false };
+	}
+
+	// Check if it's a simple YYYY-MM-DD
+	const simpleDateRegex = /^(\d{4})[-/](\d{2})[-/](\d{2})$/;
+	const simpleMatch = trimmed.match(simpleDateRegex);
+	if (simpleMatch) {
+		return {
+			value: `${simpleMatch[1]}-${simpleMatch[2]}-${simpleMatch[3]}T00:00:00.000Z`,
+			hasTime: false,
+		};
+	}
+
+	// Otherwise, let's try parsing it with Date
+	const timestamp = Date.parse(trimmed);
+	if (isNaN(timestamp)) {
+		return { value: trimmed, hasTime: false };
+	}
+
+	const d = new Date(timestamp);
+	const hasColon = trimmed.includes(':');
+
+	if (hasColon) {
+		return { value: d.toISOString(), hasTime: true };
+	} else {
+		const isIsoFormat = trimmed.includes('-');
+		const year = isIsoFormat ? d.getUTCFullYear() : d.getFullYear();
+		const month = String((isIsoFormat ? d.getUTCMonth() : d.getMonth()) + 1).padStart(2, '0');
+		const date = String(isIsoFormat ? d.getUTCDate() : d.getDate()).padStart(2, '0');
+		return { value: `${year}-${month}-${date}T00:00:00.000Z`, hasTime: false };
+	}
+}
+
+function parseDateProperty(val: unknown): IDataObject {
+	let startStr: unknown = null;
+	let endStr: unknown = null;
+	let resolution: string | undefined = undefined;
+
+	let parsedJson: any = null;
+	if (typeof val === 'string') {
+		const trimmed = val.trim();
+		if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+			try {
+				parsedJson = JSON.parse(trimmed);
+			} catch (e) {
+				// Ignore JSON parse error, treat as raw string
+			}
+		}
+	}
+
+	if (parsedJson) {
+		const dateObj =
+			parsedJson.date && typeof parsedJson.date === 'object' ? parsedJson.date : parsedJson;
+		startStr = dateObj.start !== undefined ? dateObj.start : null;
+		endStr = dateObj.end !== undefined ? dateObj.end : null;
+		resolution = typeof dateObj.dateResolution === 'string' ? dateObj.dateResolution : undefined;
+	} else if (typeof val === 'object' && val !== null) {
+		const dateObj =
+			(val as any).date && typeof (val as any).date === 'object' ? (val as any).date : val;
+		startStr = dateObj.start !== undefined ? dateObj.start : null;
+		endStr = dateObj.end !== undefined ? dateObj.end : null;
+		resolution = typeof dateObj.dateResolution === 'string' ? dateObj.dateResolution : undefined;
+	} else if (typeof val === 'string') {
+		const trimmed = val.trim();
+		if (!trimmed || trimmed.toLowerCase() === 'null') {
+			return {
+				type: 'date',
+				date: {
+					dateResolution: 'day',
+					start: null,
+					end: null,
+				},
+			};
+		}
+
+		// Split range by " to ", " - ", "/", or ","
+		const parts = trimmed.split(/\s+to\s+|\s+-\s+|\/|,/i);
+		if (parts.length >= 2) {
+			startStr = parts[0];
+			endStr = parts[1];
+		} else {
+			startStr = trimmed;
+			endStr = null;
+		}
+	} else if (val === null || val === undefined) {
+		return {
+			type: 'date',
+			date: {
+				dateResolution: 'day',
+				start: null,
+				end: null,
+			},
+		};
+	} else {
+		// Fallback for numbers, etc.
+		startStr = String(val);
+	}
+
+	// Parse start and end strings
+	const parsedStart =
+		startStr !== null ? parseDateString(String(startStr)) : { value: null, hasTime: false };
+	const parsedEnd =
+		endStr !== null ? parseDateString(String(endStr)) : { value: null, hasTime: false };
+
+	// Determine resolution if not explicitly set
+	if (!resolution) {
+		if (parsedStart.hasTime || parsedEnd.hasTime) {
+			resolution = 'time';
+		} else {
+			resolution = 'day';
+		}
+	}
+
+	return {
+		type: 'date',
+		date: {
+			dateResolution: resolution,
+			start: parsedStart.value,
+			end: parsedEnd.value,
+		},
+	};
+}
+
 function mapUiPropertyToApi(prop: { id: string; type: string; value: unknown }): IDataObject {
 	const type = prop.type;
 	const val = prop.value;
@@ -172,7 +305,7 @@ function mapUiPropertyToApi(prop: { id: string; type: string; value: unknown }):
 	} else if (type === 'url') {
 		return { type: 'url', url: { value: String(val ?? '') } };
 	} else if (type === 'date') {
-		return { type: 'date', date: { start: String(val ?? '') } };
+		return parseDateProperty(val);
 	} else if (type === 'label') {
 		return {
 			type: 'label',

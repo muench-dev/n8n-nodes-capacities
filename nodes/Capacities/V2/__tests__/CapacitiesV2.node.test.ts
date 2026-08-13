@@ -6,6 +6,7 @@ import { getOptions, getProperty } from './testUtils';
 const mockSpaceGet = jest.fn();
 const mockSpaceStructures = jest.fn();
 const mockObjectsSearch = jest.fn();
+const mockObjectGet = jest.fn();
 const mockObjectCreate = jest.fn();
 const mockObjectUpdate = jest.fn();
 const mockObjectDelete = jest.fn();
@@ -24,6 +25,7 @@ jest.mock('@capacities/api', () => {
 					search: mockObjectsSearch,
 				},
 				object: {
+					get: mockObjectGet,
 					create: mockObjectCreate,
 					update: mockObjectUpdate,
 					delete: mockObjectDelete,
@@ -406,5 +408,31 @@ describe('CapacitiesV2 node', () => {
 				tags3: { type: 'label', label: [{ id: 'tag-5' }, { id: 'tag-6' }] },
 			},
 		});
+	});
+
+	it('gets objects', async () => {
+		const node = new CapacitiesV2();
+		mockObjectGet.mockResolvedValue({ id: 'object-id-123', title: 'Test Object' });
+		const context = {
+			getInputData: jest.fn(() => [{ json: {} }]),
+			getNode: jest.fn(() => ({ name: 'Capacities', type: 'capacities' })),
+			getNodeParameter: jest.fn((parameterName: string) => {
+				const parameters: Record<string, unknown> = {
+					resource: 'object',
+					operation: 'get',
+					id: 'object-id-123',
+				};
+
+				return parameters[parameterName];
+			}),
+			getCredentials: jest.fn(() => Promise.resolve({ token: 'test-token' })),
+		} as unknown as IExecuteFunctions;
+
+		const result = await node.execute.call(context);
+
+		expect(mockObjectGet).toHaveBeenCalledWith({
+			id: 'object-id-123',
+		});
+		expect(result).toEqual([[{ json: { id: 'object-id-123', title: 'Test Object' } }]]);
 	});
 });

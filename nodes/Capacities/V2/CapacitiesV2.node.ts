@@ -449,6 +449,10 @@ export class CapacitiesV2 implements INodeType {
 
 					await client.object.delete({ id, hardDelete });
 					response = { success: true };
+				} else if (resource === 'object' && operation === 'get') {
+					const id = this.getNodeParameter('id', itemIndex) as string;
+
+					response = await client.object.get({ id });
 				} else {
 					throw new NodeOperationError(
 						this.getNode(),

@@ -38,6 +38,12 @@ export const object: INodeProperties[] = [
 				action: 'Delete an object',
 			},
 			{
+				name: 'Get',
+				value: 'get',
+				description: 'Get an object from your space',
+				action: 'Get an object',
+			},
+			{
 				name: 'Update',
 				value: 'update',
 				description: 'Update properties, collections, or blocks of an object',
@@ -88,11 +94,11 @@ export const object: INodeProperties[] = [
 		type: 'string',
 		default: '',
 		required: true,
-		description: 'The ID of the object to update or delete',
+		description: 'The ID of the object to get, update, or delete',
 		displayOptions: {
 			show: {
 				resource: ['object'],
-				operation: ['update', 'delete'],
+				operation: ['get', 'update', 'delete'],
 			},
 		},
 	},

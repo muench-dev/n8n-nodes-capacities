@@ -11,7 +11,10 @@ const mockObjectCreate = jest.fn();
 const mockObjectUpdate = jest.fn();
 const mockObjectDelete = jest.fn();
 const mockObjectCreateFromUrl = jest.fn();
+const mockObjectMarkdownCreate = jest.fn();
+const mockObjectMarkdownUpdate = jest.fn();
 const mockBlocksDailyNoteAppend = jest.fn();
+const mockBlocksAppend = jest.fn();
 
 jest.mock('@capacities/api', () => {
 	return {
@@ -30,11 +33,16 @@ jest.mock('@capacities/api', () => {
 					update: mockObjectUpdate,
 					delete: mockObjectDelete,
 					createFromUrl: mockObjectCreateFromUrl,
+					markdown: {
+						create: mockObjectMarkdownCreate,
+						update: mockObjectMarkdownUpdate,
+					},
 				},
 				blocks: {
 					dailyNote: {
 						append: mockBlocksDailyNoteAppend,
 					},
+					append: mockBlocksAppend,
 				},
 			};
 		}),
@@ -146,6 +154,34 @@ describe('CapacitiesV2 node', () => {
 			},
 		});
 		expect(result).toEqual([[{ json: { id: 'created-object' } }]]);
+	});
+
+	it('creates objects from markdown', async () => {
+		const node = new CapacitiesV2();
+		mockObjectMarkdownCreate.mockResolvedValue({ id: 'created-object-md' });
+		const context = {
+			getInputData: jest.fn(() => [{ json: {} }]),
+			getNode: jest.fn(() => ({ name: 'Capacities', type: 'capacities' })),
+			getNodeParameter: jest.fn((parameterName: string) => {
+				const parameters: Record<string, unknown> = {
+					resource: 'object',
+					operation: 'createFromMarkdown',
+					structureId: 'structure-1',
+					markdown: '# My Object\n\nSome body text.',
+				};
+
+				return parameters[parameterName];
+			}),
+			getCredentials: jest.fn(() => Promise.resolve({ token: 'test-token' })),
+		} as unknown as IExecuteFunctions;
+
+		const result = await node.execute.call(context);
+
+		expect(mockObjectMarkdownCreate).toHaveBeenCalledWith({
+			structureId: 'structure-1',
+			markdown: '# My Object\n\nSome body text.',
+		});
+		expect(result).toEqual([[{ json: { id: 'created-object-md' } }]]);
 	});
 
 	it('creates objects with additional properties, collections, and blocks', async () => {
@@ -288,6 +324,62 @@ describe('CapacitiesV2 node', () => {
 			},
 		});
 		expect(result).toEqual([[{ json: { id: 'updated-object' } }]]);
+	});
+
+	it('updates objects from markdown', async () => {
+		const node = new CapacitiesV2();
+		mockObjectMarkdownUpdate.mockResolvedValue({ id: 'updated-object-md' });
+		const context = {
+			getInputData: jest.fn(() => [{ json: {} }]),
+			getNode: jest.fn(() => ({ name: 'Capacities', type: 'capacities' })),
+			getNodeParameter: jest.fn((parameterName: string) => {
+				const parameters: Record<string, unknown> = {
+					resource: 'object',
+					operation: 'updateFromMarkdownFrontmatter',
+					id: 'object-id-123',
+					markdown: '---\ntitle: Updated Title\n---\n',
+				};
+
+				return parameters[parameterName];
+			}),
+			getCredentials: jest.fn(() => Promise.resolve({ token: 'test-token' })),
+		} as unknown as IExecuteFunctions;
+
+		const result = await node.execute.call(context);
+
+		expect(mockObjectMarkdownUpdate).toHaveBeenCalledWith({
+			id: 'object-id-123',
+			markdown: '---\ntitle: Updated Title\n---\n',
+		});
+		expect(result).toEqual([[{ json: { id: 'updated-object-md' } }]]);
+	});
+
+	it('appends markdown to objects', async () => {
+		const node = new CapacitiesV2();
+		mockBlocksAppend.mockResolvedValue({ id: 'appended-object-md' });
+		const context = {
+			getInputData: jest.fn(() => [{ json: {} }]),
+			getNode: jest.fn(() => ({ name: 'Capacities', type: 'capacities' })),
+			getNodeParameter: jest.fn((parameterName: string) => {
+				const parameters: Record<string, unknown> = {
+					resource: 'object',
+					operation: 'appendFromMarkdown',
+					id: 'object-id-123',
+					markdown: '## Appended\n\nMore body text.',
+				};
+
+				return parameters[parameterName];
+			}),
+			getCredentials: jest.fn(() => Promise.resolve({ token: 'test-token' })),
+		} as unknown as IExecuteFunctions;
+
+		const result = await node.execute.call(context);
+
+		expect(mockBlocksAppend).toHaveBeenCalledWith({
+			id: 'object-id-123',
+			markdown: '## Appended\n\nMore body text.',
+		});
+		expect(result).toEqual([[{ json: { id: 'appended-object-md' } }]]);
 	});
 
 	it('deletes objects', async () => {

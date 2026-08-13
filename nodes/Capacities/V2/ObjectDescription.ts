@@ -10,6 +10,12 @@ export const object: INodeProperties[] = [
 		default: 'create',
 		options: [
 			{
+				name: 'Append From Markdown',
+				value: 'appendFromMarkdown',
+				description: "Append Markdown content to an existing object's body",
+				action: 'Append markdown to an object',
+			},
+			{
 				name: 'Create',
 				value: 'create',
 				description: 'Create an object of any structure/type',
@@ -32,6 +38,12 @@ export const object: INodeProperties[] = [
 				},
 			},
 			{
+				name: 'Create From Markdown',
+				value: 'createFromMarkdown',
+				description: 'Create an object from Markdown content',
+				action: 'Create an object from markdown',
+			},
+			{
 				name: 'Delete',
 				value: 'delete',
 				description: 'Delete an object from your space',
@@ -48,6 +60,13 @@ export const object: INodeProperties[] = [
 				value: 'update',
 				description: 'Update properties, collections, or blocks of an object',
 				action: 'Update an object',
+			},
+			{
+				name: 'Update From Markdown Frontmatter',
+				value: 'updateFromMarkdownFrontmatter',
+				description:
+					"Update object properties from a YAML frontmatter block in a Markdown string (the object's body content is not touched)",
+				action: 'Update an object from markdown frontmatter',
 			},
 		],
 		displayOptions: {
@@ -70,7 +89,7 @@ export const object: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				resource: ['object'],
-				operation: ['create'],
+				operation: ['create', 'createFromMarkdown'],
 			},
 		},
 	},
@@ -89,6 +108,38 @@ export const object: INodeProperties[] = [
 		},
 	},
 	{
+		displayName: 'Markdown',
+		name: 'markdown',
+		type: 'string',
+		default: '',
+		required: true,
+		description:
+			'The Markdown body content to set (Create) or append (Append). See the <a href="https://developers.capacities.io/api/concepts/markdown">Capacities markdown docs</a> for supported syntax.',
+		hint: 'Plain Markdown, e.g. "## Heading\\n\\nSome body text."',
+		displayOptions: {
+			show: {
+				resource: ['object'],
+				operation: ['createFromMarkdown', 'appendFromMarkdown'],
+			},
+		},
+	},
+	{
+		displayName: 'Markdown Frontmatter',
+		name: 'markdown',
+		type: 'string',
+		default: '',
+		required: true,
+		description:
+			'Only the YAML frontmatter block is processed - keys are property IDs (e.g. "title", or a UUID for custom properties) and values are the new plain values to set. Everything after the closing "---" is ignored, so this cannot be used to change the object body - use the Create From Markdown or Append From Markdown operations for that.',
+		hint: 'Example: "---\\ntitle: New Title\\ndescription: Updated description\\n---"',
+		displayOptions: {
+			show: {
+				resource: ['object'],
+				operation: ['updateFromMarkdownFrontmatter'],
+			},
+		},
+	},
+	{
 		displayName: 'Object ID',
 		name: 'id',
 		type: 'string',
@@ -98,7 +149,13 @@ export const object: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				resource: ['object'],
-				operation: ['get', 'update', 'delete'],
+				operation: [
+					'get',
+					'update',
+					'delete',
+					'updateFromMarkdownFrontmatter',
+					'appendFromMarkdown',
+				],
 			},
 		},
 	},

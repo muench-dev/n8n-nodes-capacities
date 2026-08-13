@@ -37,6 +37,9 @@ pnpm add @muench-dev/n8n-nodes-capacities
 	- Save tags as `RootTag` objects for later use in object tag properties
 - Object operations
 	- Create an object of any structure/type, with a title plus optional additional properties, collections, and block content
+	- Create an object directly from Markdown body content (`POST /object/markdown`)
+	- Append Markdown content to an existing object's body (block-append endpoint)
+	- Update From Markdown Frontmatter: update an object's properties from a YAML frontmatter block in a Markdown string, without touching its body content (`PATCH /object/markdown`) — see [Updating Properties From Markdown Frontmatter](#updating-properties-from-markdown-frontmatter) below
 - Daily note operations
 	- Append markdown to a daily note, optionally skipping the automatic timestamp or targeting a specific date
 
@@ -94,6 +97,27 @@ Alternatively, you can define all properties using **Properties (JSON)**:
   }
 }
 ```
+
+## Updating Properties From Markdown Frontmatter
+
+The **Update From Markdown Frontmatter** object operation (`PATCH /object/markdown`) only ever reads the YAML frontmatter block of the **Markdown Frontmatter** field — it never touches the object's body content. It's a shortcut for setting a few plain-value properties without building the typed JSON properties structure used by **Properties (JSON)** / **Properties to Send**, and it works differently from **Create From Markdown** and **Append From Markdown**, which instead set/append actual body content:
+
+- The **Markdown Frontmatter** field must start with a YAML frontmatter block delimited by `---` lines.
+- Each key in the frontmatter is a property ID — either a built-in one like `title`, or the UUID of a custom property (the same IDs used elsewhere in this node's Properties (JSON) / Properties to Send fields).
+- Each value is the plain value to set (a string, number, or boolean) — not the typed `{ type, ... }` wrapper the JSON-based property fields require.
+- Any content after the closing `---` is ignored, so this operation **cannot** change the object body — use Append From Markdown (to add content) or Create From Markdown (when creating) for that instead.
+- Omitted properties are left unchanged.
+
+Example — set the title and a custom `description` property on an existing object:
+
+1. **Object ID**: the ID of the object to update.
+2. **Markdown Frontmatter**:
+   ```
+   ---
+   title: New Title
+   description: Updated description
+   ---
+   ```
 
 ---
 

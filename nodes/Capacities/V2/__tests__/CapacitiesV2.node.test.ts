@@ -365,7 +365,13 @@ describe('CapacitiesV2 node', () => {
 					type: 'date',
 					date: { dateResolution: 'day', start: '2026-08-13T00:00:00.000Z', end: null },
 				},
-				tags: { type: 'label', label: [{ id: 'tag-1' }, { id: 'tag-2' }] },
+				tags: {
+					type: 'label',
+					label: [
+						{ id: 'tag-1', name: 'tag-1' },
+						{ id: 'tag-2', name: 'tag-2' },
+					],
+				},
 				links: { type: 'entity', entity: [{ id: 'ent-1' }, { id: 'ent-2' }] },
 			},
 		});
@@ -406,9 +412,101 @@ describe('CapacitiesV2 node', () => {
 			structureId: 'structure-1',
 			properties: {
 				title: { type: 'title', title: { value: 'My Object' } },
-				tags1: { type: 'label', label: [{ id: 'tag-1' }, { id: 'tag-2' }] },
-				tags2: { type: 'label', label: [{ id: 'tag-3' }, { id: 'tag-4' }] },
-				tags3: { type: 'label', label: [{ id: 'tag-5' }, { id: 'tag-6' }] },
+				tags1: {
+					type: 'label',
+					label: [
+						{ id: 'tag-1', name: 'tag-1' },
+						{ id: 'tag-2', name: 'tag-2' },
+					],
+				},
+				tags2: {
+					type: 'label',
+					label: [
+						{ id: 'tag-3', name: 'tag-3' },
+						{ id: 'tag-4', name: 'tag-4' },
+					],
+				},
+				tags3: {
+					type: 'label',
+					label: [
+						{ id: 'tag-5', name: 'tag-5' },
+						{ id: 'tag-6', name: 'tag-6' },
+					],
+				},
+			},
+		});
+	});
+
+	it('handles single objects, nested properties, and stringified JSON objects for label/entity properties', async () => {
+		const node = new CapacitiesV2();
+		mockObjectCreate.mockResolvedValue({ id: 'created-object' });
+
+		const context = {
+			getInputData: jest.fn(() => [{ json: {} }]),
+			getNode: jest.fn(() => ({ name: 'Capacities', type: 'capacities' })),
+			getNodeParameter: jest.fn((parameterName: string) => {
+				const parameters: Record<string, unknown> = {
+					resource: 'object',
+					operation: 'create',
+					structureId: 'structure-1',
+					title: 'My Object',
+					additionalFields: {
+						propertiesToSend: {
+							property: [
+								{ id: 'single_obj', type: 'label', value: { id: 'tag-1', name: 'Tag 1' } },
+								{ id: 'single_obj_str', type: 'label', value: '{"id": "tag-2", "name": "Tag 2"}' },
+								{
+									id: 'nested_label_obj',
+									type: 'label',
+									value: { type: 'label', label: [{ id: 'tag-3' }] },
+								},
+								{
+									id: 'nested_label_str',
+									type: 'label',
+									value: '{"type": "label", "label": [{"id": "tag-4"}]}',
+								},
+								{
+									id: 'nested_entity_obj',
+									type: 'entity',
+									value: { type: 'entity', entity: [{ id: 'ent-1' }] },
+								},
+								{
+									id: 'nested_entity_str',
+									type: 'entity',
+									value: '{"type": "entity", "entity": [{"id": "ent-2"}]}',
+								},
+								{ id: 'single_quoted_obj_arr', type: 'label', value: "[{ id: 'medium' }]" },
+								{ id: 'single_quoted_str_arr', type: 'label', value: "['tag-1', 'tag-2']" },
+							],
+						},
+					},
+				};
+
+				return parameters[parameterName];
+			}),
+			getCredentials: jest.fn(() => Promise.resolve({ token: 'test-token' })),
+		} as unknown as IExecuteFunctions;
+
+		await node.execute.call(context);
+
+		expect(mockObjectCreate).toHaveBeenCalledWith({
+			structureId: 'structure-1',
+			properties: {
+				title: { type: 'title', title: { value: 'My Object' } },
+				single_obj: { type: 'label', label: [{ id: 'tag-1', name: 'Tag 1' }] },
+				single_obj_str: { type: 'label', label: [{ id: 'tag-2', name: 'Tag 2' }] },
+				nested_label_obj: { type: 'label', label: [{ id: 'tag-3', name: 'tag-3' }] },
+				nested_label_str: { type: 'label', label: [{ id: 'tag-4', name: 'tag-4' }] },
+				nested_entity_obj: { type: 'entity', entity: [{ id: 'ent-1' }] },
+				nested_entity_str: { type: 'entity', entity: [{ id: 'ent-2' }] },
+				single_quoted_obj_arr: { type: 'label', label: [{ id: 'medium', name: 'medium' }] },
+				single_quoted_str_arr: {
+					type: 'label',
+					label: [
+						{ id: 'tag-1', name: 'tag-1' },
+						{ id: 'tag-2', name: 'tag-2' },
+					],
+				},
 			},
 		});
 	});

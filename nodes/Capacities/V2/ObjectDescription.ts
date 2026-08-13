@@ -185,7 +185,7 @@ export const object: INodeProperties[] = [
 								type: 'string',
 								default: '',
 								description:
-									'The value to set (use true/false for Boolean, numbers for Number, ISO strings, ranges like "2026-08-13 to 2026-08-15", or JSON/expressions for Date)',
+									'The value to set (use true/false for Boolean, numbers for Number, ISO strings/ranges for Date, or comma-separated IDs / JSON objects/arrays for Label and Reference properties)',
 							},
 						],
 					},
@@ -276,7 +276,7 @@ export const object: INodeProperties[] = [
 								type: 'string',
 								default: '',
 								description:
-									'The value to set (use true/false for Boolean, numbers for Number, ISO strings, ranges like "2026-08-13 to 2026-08-15", or JSON/expressions for Date)',
+									'The value to set (use true/false for Boolean, numbers for Number, ISO strings/ranges for Date, or comma-separated IDs / JSON objects/arrays for Label and Reference properties)',
 							},
 						],
 					},

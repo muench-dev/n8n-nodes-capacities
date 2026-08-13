@@ -35,6 +35,8 @@ pnpm add @muench-dev/n8n-nodes-capacities
 	- Save URLs into Capacities, including optional markdown, title, description, and searchable tag properties
 - Tag operations
 	- Save tags as `RootTag` objects for later use in object tag properties
+- Object operations
+	- Create an object of any structure/type, with a title plus optional additional properties, collections, and block content
 - Daily note operations
 	- Append markdown to a daily note, optionally skipping the automatic timestamp or targeting a specific date
 

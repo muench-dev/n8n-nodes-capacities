@@ -1,4 +1,5 @@
 import type { ILoadOptionsFunctions, INodePropertyOptions } from 'n8n-workflow';
+import { CapacitiesClient } from '@capacities/api';
 
 const CAPACITIES_RATE_LIMIT_MESSAGE =
 	'Capacities is receiving too many requests from this API token. Please wait a moment and try loading the options again.';
@@ -21,12 +22,14 @@ function getErrorStatusCode(error: unknown): number | undefined {
 	}
 
 	const errorObject = error as {
+		status?: number;
 		httpCode?: number;
 		statusCode?: number;
 		response?: { statusCode?: number; status?: number };
 	};
 
 	return (
+		errorObject.status ??
 		errorObject.httpCode ??
 		errorObject.statusCode ??
 		errorObject.response?.statusCode ??
@@ -47,20 +50,18 @@ function throwHumanReadableLoadOptionsError(error: unknown): never {
 }
 
 export async function loadStructures(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
-	let response: { structures: Array<{ id: string; title: string }> };
+	let response: any;
 
 	try {
-		response = (await this.helpers.requestWithAuthentication.call(this, 'capacitiesApi', {
-			method: 'GET',
-			baseURL: 'https://api.capacities.io',
-			url: '/space/structures',
-			json: true,
-		})) as { structures: Array<{ id: string; title: string }> };
+		const credentials = await this.getCredentials('capacitiesApi');
+		const token = credentials.token as string;
+		const client = new CapacitiesClient({ apiToken: token });
+		response = await client.space.structures();
 	} catch (error) {
 		throwHumanReadableLoadOptionsError(error);
 	}
 
-	return response.structures
+	return (response.structures as Array<{ id: string; title: string }>)
 		.map((structure) => ({ name: structure.title, value: structure.id }))
 		.sort((a, b) => a.name.localeCompare(b.name));
 }
@@ -70,24 +71,20 @@ export async function loadTags(this: ILoadOptionsFunctions): Promise<INodeProper
 	const queries = 'abcdefghijklmnopqrstuvwxyz'.split('');
 
 	try {
+		const credentials = await this.getCredentials('capacitiesApi');
+		const token = credentials.token as string;
+		const client = new CapacitiesClient({ apiToken: token });
+
 		await Promise.all(
 			queries.map(async (query) => {
-				const response = (await this.helpers.requestWithAuthentication.call(this, 'capacitiesApi', {
-					method: 'POST',
-					baseURL: 'https://api.capacities.io',
-					url: '/objects/search',
-					json: true,
-					body: {
-						query,
-						structureIds: ['RootTag'],
-						limit: 50,
-					},
-				})) as {
-					results: Array<{ id: string; title: string }>;
-				};
+				const response = await client.objects.search({
+					query,
+					structureIds: ['RootTag'],
+					limit: 50,
+				});
 
-				for (const tag of response.results) {
-					tagById.set(tag.id, tag.title);
+				for (const tag of response.results as any[]) {
+					tagById.set(tag.id as string, tag.title as string);
 				}
 			}),
 		);

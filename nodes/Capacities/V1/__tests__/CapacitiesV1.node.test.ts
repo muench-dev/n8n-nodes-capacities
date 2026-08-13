@@ -17,12 +17,11 @@ describe('CapacitiesV1 node', () => {
 		const node = new CapacitiesV1();
 		const resourceProperty = getProperty(node.description.properties, 'resource');
 		expect(resourceProperty?.type).toBe('options');
-		expect(getOptions(resourceProperty).map((option) => option.value).sort()).toEqual([
-			'dailyNote',
-			'search',
-			'space',
-			'weblink',
-		]);
+		expect(
+			getOptions(resourceProperty)
+				.map((option) => option.value)
+				.sort(),
+		).toEqual(['dailyNote', 'search', 'space', 'weblink']);
 	});
 
 	it('registers loadStructures helper for load options', () => {

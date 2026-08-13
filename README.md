@@ -45,6 +45,58 @@ pnpm add @muench-dev/n8n-nodes-capacities
 ![images](.github/images/screenshot_20240616_174548.png)
 ![images](.github/images/screenshot_20240616_181848.png)
 
+## Mapping Label & Entity Properties
+
+When creating or updating objects, you can define label and entity properties using the **Properties to Send** section or within **Properties (JSON)**. The node dynamically parses several input formats:
+
+- **Comma-Separated IDs**: A list of IDs separated by a comma (e.g., `in-progress, done` maps to `[{ id: 'in-progress' }, { id: 'done' }]`).
+- **Single String ID**: A single ID (e.g., `in-progress` maps to `[{ id: 'in-progress' }]`).
+- **Array of IDs**: A JSON/native array of IDs (e.g., `["in-progress", "done"]` maps to `[{ id: 'in-progress' }, { id: 'done' }]`).
+- **Single Object (JSON or Native)**: A single object containing an `id` property (e.g., `{"id": "in-progress", "name": "In Progress"}` maps to `[{ id: 'in-progress' }]`).
+- **Nested Label/Entity Output (Direct Mapping)**: A fully qualified property structure mapped from another Capacities node output (e.g., `{"type": "label", "label": [{"id": "in-progress"}]}` maps to `[{ id: 'in-progress' }]`).
+
+### Example: Creating a Task
+
+To create a new Task in Capacities (structure ID `RootTask`):
+
+1. **Set Structure**: Choose or specify `RootTask` as the **Structure Name or ID**.
+2. **Set Title**: Enter the task's title.
+3. **Configure Properties (under Additional Fields → Properties to Send)**:
+   - **Date** (e.g., when the task was scheduled):
+     - **Property ID**: `date`
+     - **Type**: `Date`
+     - **Value**: `2026-08-13T10:25:37.585Z` (automatically parses to time resolution)
+   - **Priority**:
+     - **Property ID**: `priority`
+     - **Type**: `Label / Select`
+     - **Value**: `medium` (automatically maps to option with ID `medium` and fallback name `medium`) or `{"id": "medium", "name": "Medium"}` to explicitly provide the display name.
+
+Alternatively, you can define all properties using **Properties (JSON)**:
+
+```json
+{
+  "date": {
+    "type": "date",
+    "date": {
+      "dateResolution": "time",
+      "start": "2026-08-13T10:25:37.585Z",
+      "end": null
+    }
+  },
+  "priority": {
+    "type": "label",
+    "label": [
+      {
+        "id": "medium",
+        "name": "Medium"
+      }
+    ]
+  }
+}
+```
+
+---
+
 ## Development
 
 1. Install dependencies using pnpm (recommended for this repository):

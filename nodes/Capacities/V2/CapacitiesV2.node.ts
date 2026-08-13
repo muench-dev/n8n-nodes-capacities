@@ -110,7 +110,22 @@ function parseJsonField(
 	}
 }
 
-function parseEntityArray(val: unknown): Array<{ id: string }> {
+function tryParseJsonOrJs(str: string): any {
+	const trimmed = str.trim();
+	try {
+		return JSON.parse(trimmed);
+	} catch (_) {}
+
+	try {
+		// Repair single quotes and unquoted keys (e.g., [{ id: 'medium' }] -> [{"id": "medium"}])
+		const repaired = trimmed.replace(/'/g, '"').replace(/([{,]\s*)([a-zA-Z0-9_]+)\s*:/g, '$1"$2":');
+		return JSON.parse(repaired);
+	} catch (_) {}
+
+	return null;
+}
+
+function parseEntityArray(val: unknown): Array<{ id: string; name?: string; color?: string }> {
 	if (!val) {
 		return [];
 	}
@@ -122,25 +137,33 @@ function parseEntityArray(val: unknown): Array<{ id: string }> {
 					return { id: item.trim() };
 				}
 				if (item && typeof item === 'object') {
-					const id = (item as { id?: unknown })?.id;
-					if (typeof id === 'string') {
-						return { id: id.trim() };
+					const obj = item as Record<string, unknown>;
+					const id = obj.id;
+					if (typeof id === 'string' || typeof id === 'number') {
+						const name = typeof obj.name === 'string' ? obj.name : undefined;
+						const color = typeof obj.color === 'string' ? obj.color : undefined;
+						return {
+							id: String(id).trim(),
+							...(name ? { name } : {}),
+							...(color ? { color } : {}),
+						};
 					}
 				}
 				return null;
 			})
-			.filter((x): x is { id: string } => x !== null && !!x.id);
+			.filter((x): x is { id: string; name?: string; color?: string } => x !== null && !!x.id);
 	}
 
 	if (typeof val === 'string') {
 		const trimmed = val.trim();
-		if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
-			try {
-				const parsed = JSON.parse(trimmed);
-				if (Array.isArray(parsed)) {
-					return parseEntityArray(parsed);
-				}
-			} catch (_) {}
+		if (
+			(trimmed.startsWith('[') && trimmed.endsWith(']')) ||
+			(trimmed.startsWith('{') && trimmed.endsWith('}'))
+		) {
+			const parsed = tryParseJsonOrJs(trimmed);
+			if (parsed) {
+				return parseEntityArray(parsed);
+			}
 		}
 
 		return trimmed
@@ -148,6 +171,23 @@ function parseEntityArray(val: unknown): Array<{ id: string }> {
 			.map((id) => id.trim())
 			.filter(Boolean)
 			.map((id) => ({ id }));
+	}
+
+	if (typeof val === 'object') {
+		const obj = val as Record<string, unknown>;
+		if (obj.label !== undefined) {
+			return parseEntityArray(obj.label);
+		}
+		if (obj.entity !== undefined) {
+			return parseEntityArray(obj.entity);
+		}
+		if (obj.id !== undefined && (typeof obj.id === 'string' || typeof obj.id === 'number')) {
+			const name = typeof obj.name === 'string' ? obj.name : undefined;
+			const color = typeof obj.color === 'string' ? obj.color : undefined;
+			return [
+				{ id: String(obj.id).trim(), ...(name ? { name } : {}), ...(color ? { color } : {}) },
+			];
+		}
 	}
 
 	return [];
@@ -307,9 +347,14 @@ function mapUiPropertyToApi(prop: { id: string; type: string; value: unknown }):
 	} else if (type === 'date') {
 		return parseDateProperty(val);
 	} else if (type === 'label') {
+		const parsed = parseEntityArray(val);
 		return {
 			type: 'label',
-			label: parseEntityArray(val),
+			label: parsed.map((item) => ({
+				id: item.id,
+				name: item.name ?? item.id,
+				...(item.color ? { color: item.color } : {}),
+			})),
 		};
 	} else if (type === 'entity') {
 		return {

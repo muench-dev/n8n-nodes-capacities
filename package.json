@@ -55,7 +55,7 @@
     "@typescript-eslint/parser": "~8.66",
     "braces": "^3.0.3",
     "copyfiles": "^2.4.1",
-    "eslint-plugin-n8n-nodes-base": "^1.16.1",
+    "eslint-plugin-n8n-nodes-base": "^2.0.0",
     "jest": "^30.2.0",
     "n8n-workflow": "*",
     "prettier": "^3.4.1",

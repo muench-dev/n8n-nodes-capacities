@@ -10,10 +10,10 @@ importers:
     dependencies:
       '@capacities/api':
         specifier: ^1.1.2
-        version: 1.1.3(zod@4.4.3)
+        version: 1.1.3(zod@4.5.4)
       zod:
         specifier: ^4.4.3
-        version: 4.4.3
+        version: 4.5.4
     devDependencies:
       '@types/jest':
         specifier: ^30.0.0
@@ -2235,8 +2235,8 @@ packages:
   zod@3.25.67:
     resolution: {integrity: sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw==}
 
-  zod@4.4.3:
-    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
+  zod@4.5.4:
+    resolution: {integrity: sha512-sC95tT5iHHH9gtpj6A81kh+NEaRAUFN+qlUPDUbRfOMvNf5QCBqsb3WgvnpVtK5Y+4UfA6KqufotuTvMGiTlsA==}
 
 snapshots:
 
@@ -2437,9 +2437,9 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@capacities/api@1.1.3(zod@4.4.3)':
+  '@capacities/api@1.1.3(zod@4.5.4)':
     dependencies:
-      zod: 4.4.3
+      zod: 4.5.4
 
   '@emnapi/core@1.10.0':
     dependencies:
@@ -4810,4 +4810,4 @@ snapshots:
 
   zod@3.25.67: {}
 
-  zod@4.4.3: {}
+  zod@4.5.4: {}
